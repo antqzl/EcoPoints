@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoPoints</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- PAGE 1: LOGIN SECTION (Active by default)  -->
+  <!-- ========================================== -->
+  <section id="loginPage" class="page-view active">
+    <div class="login-container">
+      
+      <!-- LEFT SIDE: Hero Section -->
+      <main class="hero-section">
+        <div class="brand">
+          <div class="logo-icon">
+            <i data-lucide="leaf"></i>
+          </div>
+          <span class="brand-name">EcoPoints</span>
+        </div>
+
+        <div class="hero-content">
+          <h1 class="hero-title">
+            People.<br>
+            Progress.<br>
+            <span class="highlight">A Greener Tomorrow.</span>
+          </h1>
+          <p class="hero-subtitle">
+            Join a community of students and employees making a real difference through sustainable choices, everyday.
+          </p>
+
+          <div class="features-grid">
+            <div class="feature-item">
+              <div class="feature-icon icon-green">
+                <i data-lucide="leaf"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Take action</h4>
+                <p>Sustainable transport, energy saving and more.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon icon-teal">
+                <i data-lucide="users"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Earn rewards</h4>
+                <p>Get EcoPoints for positive choices.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon icon-emerald">
+                <i data-lucide="trending-up"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Create impact</h4>
+                <p>Greener campuses and healthier communities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT SIDE: Login Card Area -->
+      <aside class="auth-section">
+        <div class="login-card">
+          <div class="card-brand">
+            <div class="logo-icon small">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <h2 class="card-title">
+            Welcome back — <br>
+            <span class="green-text">continue your sustainability journey.</span>
+          </h2>
+          <p class="card-subtitle">
+            Sign in to track your activity, earn rewards, and make a bigger impact together.
+          </p>
+
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <i data-lucide="mail" class="input-icon"></i>
+                <input type="email" id="email" placeholder="name@university.edu" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-wrapper">
+                <i data-lucide="lock" class="input-icon"></i>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                <button type="button" id="togglePassword" class="toggle-password" aria-label="Toggle password visibility">
+                  <i data-lucide="eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe">
+                <span class="custom-checkbox"></span>
+                Remember me
+              </label>
+              <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              Sign In <i data-lucide="arrow-right"></i>
+            </button>
+          </form>
+
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <button class="btn-sso" id="googleSignInBtn">
+            <svg class="google-icon" width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+            Sign in with Google
+          </button>
+
+          <p class="demo-link">
+            New to EcoPoints? <a href="#" id="registerLink">Create an account <i data-lucide="arrow-right"></i></a>
+          </p>
+          <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PAGE: ACCOUNT PROFILE -->
+  <section id="profilePage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" class="active" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside>
+      <main class="utility-main"><div class="utility-header"><div><span class="eyebrow">ACCOUNT</span><h1>Your profile and preferences</h1><p>Manage personal details and the way EcoPoints feels.</p></div><button id="logoutBtn" class="outline-button">Sign out</button></div><div class="profile-layout"><article class="utility-card profile-card"><div class="profile-avatar" id="profileAvatar">ST</div><div><h2 id="profileName">Sarah Tan</h2><p id="profileEmail" class="card-muted">sarah.tan@example.edu</p></div><label>Profile picture<input id="profilePictureInput" type="file" accept="image/*"></label><button id="saveProfileBtn" class="btn-primary compact-button">Save changes</button><label>Full name<input id="profileNameInput" type="text" value="Sarah Tan"></label><label>Email<input id="profileEmailInput" type="email" value="sarah.tan@example.edu"></label><label>Phone<input id="profilePhoneInput" type="tel" placeholder="Add a phone number"></label><div id="profileMessage" class="shop-message"></div></article><article class="utility-card settings-card"><h2>Preferences</h2><label>Language<select id="languageSetting"><option value="en">English</option><option value="zh">中文（简体）</option></select></label><label>Font size<select id="fontSetting"><option value="normal">Normal</option><option value="large">Large</option></select></label><label class="switch-row"><span>Dark mode</span><input id="themeSetting" type="checkbox"><span class="switch-ui"></span></label><label class="switch-row"><span>Notifications</span><input id="notificationSetting" type="checkbox" checked><span class="switch-ui"></span></label></article></div></main>
+    </div>
+  </section>
+
+  <!-- PAGE: ADMIN VIEW -->
+  <section id="adminPage" class="page-view">
+    <div class="utility-shell"><aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" class="active" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside><main class="utility-main"><div class="utility-header"><div><span class="eyebrow">ADMIN</span><h1>Programme controls</h1><p>Review activity and manage the content shown to your community.</p></div><span class="admin-badge">Demo administrator</span></div><div class="admin-grid"><article class="utility-card"><h2>Programme health</h2><div class="admin-metric"><strong>68%</strong><span>Participation rate</span></div><div class="admin-metric"><strong>12,540</strong><span>EcoPoints this month</span></div><div class="admin-metric"><strong>24</strong><span>Active initiatives</span></div></article><article class="utility-card"><h2>Quick actions</h2><button class="admin-action" data-admin-action="initiative"><i data-lucide="plus"></i>Create initiative</button><button class="admin-action" data-admin-action="reward"><i data-lucide="gift"></i>Add reward item</button><button class="admin-action" data-admin-action="export"><i data-lucide="download"></i>Export monthly report</button><div id="adminMessage" class="shop-message"></div></article></div></main></div>
+  </section>
+
+  <!-- PAGE: ECOPOINTS ACTIVITY -->
+  <section id="ecoPointsPage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar">
+        <div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div>
+        <nav class="utility-nav">
+          <a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a>
+          <a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a>
+          <a href="#" class="active" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a>
+          <a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a>
+          <a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a>
+          <a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a>
+        </nav>
+      </aside>
+      <main class="utility-main">
+        <div class="utility-header"><div><span class="eyebrow">ECOPOINTS</span><h1>Your sustainability activity</h1><p>Review your points history and see how your actions add up.</p></div><span class="points-total" id="ecoPointsTotal">1,250 pts</span></div>
+        <div class="utility-grid">
+          <article class="utility-card"><div class="utility-card-heading"><div><h2>Points by activity</h2><p>Points earned across your recent actions.</p></div><select id="pointsPeriod"><option>This month</option><option>Last month</option><option>This semester</option></select></div><div class="points-bars"><div><span>Transport</span><b style="height:72%"></b><strong>420</strong></div><div><span>Energy</span><b style="height:54%"></b><strong>315</strong></div><div><span>Volunteering</span><b style="height:86%"></b><strong>515</strong></div></div></article>
+          <article class="utility-card activity-card"><h2>Recent activity</h2><p class="card-muted">Your latest verified sustainability actions.</p><ul class="activity-list"><li><span class="activity-icon">🚲</span><div><strong>Cycle to campus</strong><small>Today · Sustainable Transport</small></div><b>+50</b></li><li><span class="activity-icon">⚡</span><div><strong>Energy Saving Challenge</strong><small>Yesterday · Energy</small></div><b>+75</b></li><li><span class="activity-icon">🌱</span><div><strong>Campus Green-Up</strong><small>18 Jun · Volunteering</small></div><b>+100</b></li></ul></article>
+        </div>
+        <article class="utility-card progress-card"><div><h2>Monthly progress</h2><p class="card-muted">You are 68% of the way to your 2,000 point goal.</p></div><div class="progress-track"><span style="width:68%"></span></div><strong>1,360 / 2,000 pts</strong></article>
+      </main>
+    </div>
+  </section>
+
+  <!-- PAGE: REWARDS SHOP -->
+  <section id="rewardsPage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" class="active" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside>
+      <main class="utility-main"><div class="utility-header"><div><span class="eyebrow">REWARDS SHOP</span><h1>Redeem your EcoPoints</h1><p>Choose a useful reward and make your points count.</p></div><span class="points-total" id="shopBalance">1,250 pts</span></div><div id="rewardMessage" class="shop-message" role="status"></div><div id="rewardsGrid" class="rewards-grid"><div class="empty-state">Loading rewards...</div></div></main>
+    </div>
+  </section>
+
+  <div id="registerModal" class="auth-modal" hidden>
+    <div class="auth-modal-backdrop" data-close-register></div>
+    <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+      <button type="button" class="modal-close" data-close-register aria-label="Close registration">&times;</button>
+      <h2 id="registerTitle">Create your EcoPoints account</h2>
+      <p>Start tracking sustainable actions and earning rewards.</p>
+      <form id="registerForm" class="login-form">
+        <div class="form-group"><label for="registerName">Full name</label><input id="registerName" type="text" required minlength="2" autocomplete="name"></div>
+        <div class="form-group"><label for="registerEmail">Email</label><input id="registerEmail" type="email" required autocomplete="email"></div>
+        <div class="form-group"><label for="registerPassword">Password</label><input id="registerPassword" type="password" required minlength="8" autocomplete="new-password"></div>
+        <button type="submit" class="btn-primary">Create account <i data-lucide="arrow-right"></i></button>
+        <p id="registerMessage" class="auth-message" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- PAGE 2: HOME DASHBOARD (Hidden initially)  -->
+  <!-- ========================================== -->
+  <section id="homePage" class="page-view">
+    <div class="app-container">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <div class="logo-icon">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item active nav-home-btn" data-route="homePage">
+              <i data-lucide="home"></i>
+              <span>Home</span>
+            </a>
+            <a href="#" class="nav-item nav-dash-btn" data-route="dashboardPage">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-route="ecoPointsPage">
+              <i data-lucide="zap"></i>
+              <span>EcoPoints</span>
+            </a>
+            <a href="#" class="nav-item" data-route="rewardsPage">
+              <i data-lucide="gift"></i>
+              <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item" data-route="profilePage">
+              <i data-lucide="user"></i>
+              <span>Profile</span>
+            </a>
+            <a href="#" class="nav-item" data-route="adminPage">
+              <i data-lucide="settings"></i>
+              <span>Admin</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="slogan-card">
+            <div class="globe-icon">
+              <i data-lucide="globe"></i>
+            </div>
+            <h4>Small actions brighter tomorrows.</h4>
+            <p>People. Progress. A Greener Tomorrow.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="main-content">
+        
+        <!-- TOP HEADER -->
+        <header class="top-header">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search for initiatives, rewards, or people...">
+          </div>
+
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+
+            <div class="user-profile">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120" alt="Sarah Tan" class="avatar">
+              <div class="user-info">
+                <span class="user-name">Sarah Tan</span>
+                <span class="user-role">Student</span>
+              </div>
+              <i data-lucide="chevron-down" class="dropdown-icon"></i>
+            </div>
+          </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-body">
+          
+          <!-- HERO BANNER -->
+          <section class="welcome-banner">
+            <div class="banner-text">
+              <span class="banner-tag">
+                <i data-lucide="leaf"></i> WELCOME TO ECOPOINTS
+              </span>
+              <h1>Track sustainability.<br>Earn rewards.</h1>
+              <p>Students and employees can earn EcoPoints through sustainable transport, energy saving, volunteering and more — for a cleaner, healthier tomorrow.</p>
+              <button class="btn-banner">
+                Start Collecting Points <i data-lucide="arrow-right"></i>
+              </button>
+            </div>
+            <div class="banner-graphic">
+              <div class="graphic-badge">
+                <span>GREENER PEOPLE BRIGHTER TOMORROWS</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- STATS CARDS ROW -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-green">
+                  <i data-lucide="leaf"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Your EcoPoints Balance</span>
+              <div class="stat-value-group">
+                <span class="stat-value">1,250</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +120</span>
+              </div>
+              <p class="stat-subtext">Keep going! Every action counts.</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-blue">
+                  <i data-lucide="zap"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Latest Activities</span>
+              <div class="stat-value-group">
+                <span class="stat-value">5</span>
+                <span class="stat-tag-text">this week</span>
+              </div>
+              <p class="stat-subtext">Cycling, volunteering, energy saving</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-orange">
+                  <i data-lucide="gift"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Rewards Redeemed</span>
+              <div class="stat-value-group">
+                <span class="stat-value">3</span>
+                <span class="stat-tag-text">this semester</span>
+              </div>
+              <p class="stat-subtext">You're making a positive impact!</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-emerald">
+                  <i data-lucide="trophy"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Your Energy-Saving Rank</span>
+              <div class="stat-value-group">
+                <span class="stat-value">#12</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 5 places</span>
+              </div>
+              <p class="stat-subtext">Top 10% in your organisation!</p>
+            </div>
+          </section>
+
+          <!-- MAIN 3-COLUMN SECTIONS -->
+          <section class="content-grid">
+            <div class="card-box initiatives-card">
+              <div class="card-title-bar">
+                <h3>Featured Initiatives</h3>
+                <a href="#" class="view-link">View All <i data-lucide="arrow-right"></i></a>
+              </div>
+              <div class="initiatives-list">
+                <div class="initiative-item">
+                  <div class="init-thumb bg-transport"></div>
+                  <div class="init-details">
+                    <h4>Sustainable Transport Week</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Apr 22 – Apr 28</span>
+                    <p>Cycle, walk or take public transport to earn extra EcoPoints!</p>
+                  </div>
+                  <span class="points-badge">+50 pts</span>
+                </div>
+
+                <div class="initiative-item">
+                  <div class="init-thumb bg-greenup"></div>
+                  <div class="init-details">
+                    <h4>Campus Green-Up</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Ongoing</span>
+                    <p>Join tree planting and campus clean-up activities.</p>
+                  </div>
+                  <span class="points-badge">+100 pts</span>
+                </div>
+
+                <div class="initiative-item">
+                  <div class="init-thumb bg-energy"></div>
+                  <div class="init-details">
+                    <h4>Energy Saving Challenge</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Apr 1 – Apr 30</span>
+                    <p>Reduce energy usage and help your campus reach net zero.</p>
+                  </div>
+                  <span class="points-badge">+75 pts</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box energy-preview-card">
+              <div class="card-title-bar">
+                <h3>Energy Dashboard Preview</h3>
+                <a href="#" class="view-link nav-dash-btn">View Dashboard <i data-lucide="arrow-right"></i></a>
+              </div>
+
+              <div class="energy-metrics">
+                <span class="metric-label">Campus Energy Usage</span>
+                <div class="metric-value-row">
+                  <span class="metric-number">12,540 kWh</span>
+                  <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 8%</span>
+                  <span class="metric-sub">vs. last month</span>
+                </div>
+              </div>
+
+              <div class="bar-chart-container">
+                <div class="y-axis">
+                  <span>20K</span>
+                  <span>15K</span>
+                  <span>10K</span>
+                  <span>5K</span>
+                  <span>0</span>
+                </div>
+                <div class="bars-wrapper">
+                  <div class="bar-item"><div class="bar-fill" style="height: 65%;"></div><span>Jan</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 70%;"></div><span>Feb</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 55%;"></div><span>Mar</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 50%;"></div><span>Apr</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 48%;"></div><span>May</span></div>
+                  <div class="bar-item"><div class="bar-fill highlight-bar" style="height: 42%;"></div><span>Jun</span></div>
+                </div>
+              </div>
+
+              <div class="energy-footer-note">
+                <div class="note-icon"><i data-lucide="leaf"></i></div>
+                <div class="note-text">
+                  <strong>Great progress!</strong>
+                  <p>Energy usage is 8% lower than last month.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box impact-card">
+              <h3>Make a Bigger Impact</h3>
+              <div class="impact-illustration">
+                <div class="globe-graphic">
+                  <i data-lucide="globe"></i>
+                </div>
+              </div>
+              <p class="impact-desc">Together, our sustainable choices create healthier campuses, stronger communities and a brighter future.</p>
+              
+              <button class="btn-explore">
+                Explore Initiatives <i data-lucide="arrow-right"></i>
+              </button>
+
+              <div class="impact-badges">
+                <div class="badge-item">
+                  <i data-lucide="leaf"></i>
+                  <span>Cleaner Campus</span>
+                </div>
+                <div class="badge-item">
+                  <i data-lucide="users"></i>
+                  <span>Stronger Communities</span>
+                </div>
+                <div class="badge-item">
+                  <i data-lucide="sun"></i>
+                  <span>A Greener Tomorrow</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- PAGE 3: DASHBOARD VIEW (Hidden initially)  -->
+  <!-- ========================================== -->
+  <section id="dashboardPage" class="page-view">
+    <div class="app-container">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <div class="logo-icon">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item nav-home-btn" data-route="homePage">
+              <i data-lucide="home"></i>
+              <span>Home</span>
+            </a>
+            <a href="#" class="nav-item active nav-dash-btn" data-route="dashboardPage">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-route="ecoPointsPage">
+              <i data-lucide="zap"></i>
+              <span>EcoPoints</span>
+            </a>
+            <a href="#" class="nav-item" data-route="rewardsPage">
+              <i data-lucide="gift"></i>
+              <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item" data-route="profilePage">
+              <i data-lucide="user"></i>
+              <span>Profile</span>
+            </a>
+            <a href="#" class="nav-item" data-route="adminPage">
+              <i data-lucide="settings"></i>
+              <span>Admin</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="slogan-card">
+            <div class="globe-icon">
+              <i data-lucide="globe"></i>
+            </div>
+            <h4>Small actions brighter tomorrows.</h4>
+            <p>People. Progress. A Greener Tomorrow.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="main-content">
+        
+        <!-- TOP HEADER -->
+        <header class="top-header">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search for initiatives, rewards, or people...">
+          </div>
+
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+
+            <div class="user-profile">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120" alt="Sarah Tan" class="avatar">
+              <div class="user-info">
+                <span class="user-name">Sarah Tan</span>
+                <span class="user-role">Student</span>
+              </div>
+              <i data-lucide="chevron-down" class="dropdown-icon"></i>
+            </div>
+          </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-body">
+          
+          <!-- DASHBOARD HERO BANNER -->
+          <section class="dash-banner">
+            <div class="dash-banner-left">
+              <span class="dash-tag"><i data-lucide="leaf"></i> DASHBOARD</span>
+              <h1>Insights for a greener tomorrow.</h1>
+              <p>Track progress, see how your community is doing, and find out who's making a real impact with EcoPoints.</p>
+            </div>
+            <div class="dash-filters">
+              <div class="filter-dropdown">
+                <i data-lucide="calendar"></i>
+                <select>
+                  <option>This Month</option>
+                  <option>Last Month</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="filter-dropdown">
+                <i data-lucide="building-2"></i>
+                <select>
+                  <option>Campus</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="filter-dropdown">
+                <i data-lucide="map-pin"></i>
+                <select>
+                  <option>By Area</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOP METRICS (4 CARDS ROW) -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-green">
+                  <i data-lucide="leaf"></i>
+                </div>
+              </div>
+              <span class="stat-label">EcoPoints Earned<br><strong>This Month</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">12,540</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +18%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-blue">
+                  <i data-lucide="zap"></i>
+                </div>
+              </div>
+              <span class="stat-label">Total Sustainability<br><strong>Activities</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">356</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +24%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-orange">
+                  <i data-lucide="bar-chart-2"></i>
+                </div>
+              </div>
+              <span class="stat-label">Energy Usage<br><strong>(This Month)</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">12,540 kWh</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 8%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-teal">
+                  <i data-lucide="users"></i>
+                </div>
+              </div>
+              <span class="stat-label">Participation Rate</span>
+              <div class="stat-value-group">
+                <span class="stat-value">68%</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +12%</span>
+              </div>
+              <p class="stat-subtext">of community members</p>
+            </div>
+          </section>
+
+          <!-- CHARTS ROW (ENERGY USAGE TREND + SUSTAINABILITY PARTICIPATION) -->
+          <section class="content-grid two-cols">
+            
+            <!-- LEFT CHART: ENERGY USAGE TREND -->
+            <div class="card-box chart-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="leaf" class="green-text-icon"></i>
+                    <h3>Energy Usage Trend</h3>
+                  </div>
+                  <span class="card-sub-header">Total campus energy consumption</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <!-- BAR + LINE CHART MOCKUP -->
+              <div class="chart-container-large">
+                <div class="chart-y-axis">
+                  <span>20K</span>
+                  <span>15K</span>
+                  <span>10K</span>
+                  <span>5K</span>
+                  <span>0</span>
+                </div>
+                
+                <div class="chart-area-wrap">
+                  <div class="chart-tooltip-pin" style="left: 60%; top: 35%;">
+                    <strong>8,200 kWh</strong>
+                    <small>18 Jun 2024</small>
+                  </div>
+
+                  <!-- SVG TREND LINE OVERLAY -->
+                  <svg class="trend-line-svg" viewBox="0 0 500 150" preserveAspectRatio="none">
+                    <path d="M 10 30 Q 80 10, 150 40 T 300 70 T 490 60" fill="none" stroke="#059669" stroke-width="3"/>
+                  </svg>
+
+                  <div class="chart-bars-group">
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 70%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 75%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 65%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 55%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 50%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 48%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 52%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 50%;"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-x-axis">
+                <span>1 Jun</span>
+                <span>7 Jun</span>
+                <span>14 Jun</span>
+                <span>21 Jun</span>
+                <span>28 Jun</span>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-item"><span class="dot light-green-dot"></span> Daily Energy Usage (kWh)</div>
+                <div class="legend-item"><span class="dot dark-green-dot"></span> 7-Day Average</div>
+              </div>
+            </div>
+
+            <!-- RIGHT CHART: SUSTAINABILITY PARTICIPATION -->
+            <div class="card-box chart-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="users" class="teal-text-icon"></i>
+                    <h3>Sustainability Participation</h3>
+                  </div>
+                  <span class="card-sub-header">Number of users participating in activities</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="chart-container-large">
+                <div class="chart-y-axis">
+                  <span>200</span>
+                  <span>150</span>
+                  <span>100</span>
+                  <span>50</span>
+                  <span>0</span>
+                </div>
+                
+                <div class="chart-area-wrap">
+                  <div class="stacked-bars-group">
+                    <!-- Stacked bars representation -->
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 15%;"></div>
+                      <div class="s-bar s-3" style="height: 20%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 30%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 18%;"></div>
+                      <div class="s-bar s-3" style="height: 22%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 32%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 20%;"></div>
+                      <div class="s-bar s-3" style="height: 25%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 30%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 15%;"></div>
+                      <div class="s-bar s-3" style="height: 30%;"></div>
+                      <div class="s-bar s-2" style="height: 20%;"></div>
+                      <div class="s-bar s-1" style="height: 35%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-x-axis">
+                <span>1 Jun</span>
+                <span>7 Jun</span>
+                <span>14 Jun</span>
+                <span>21 Jun</span>
+                <span>28 Jun</span>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-item"><span class="dot s1-dot"></span> Energy Saving</div>
+                <div class="legend-item"><span class="dot s2-dot"></span> Green Commuting</div>
+                <div class="legend-item"><span class="dot s3-dot"></span> Recycling</div>
+                <div class="legend-item"><span class="dot s4-dot"></span> Other</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- LEADERBOARDS ROW -->
+          <section class="content-grid two-cols">
+            
+            <!-- LEADERBOARD 1: LOWEST ENERGY CONSUMPTION -->
+            <div class="card-box leaderboard-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="trophy" class="gold-text-icon"></i>
+                    <h3>Lowest Energy Consumption Leaderboard</h3>
+                  </div>
+                  <span class="card-sub-header">Buildings / Floors / Departments ranked by total energy usage (kWh)</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="leaderboard-list">
+                <!-- RANK 1 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-1">1</span>
+                  <div class="lb-info">
+                    <strong>Science Building</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 45%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">8,200 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 28%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 2 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-2">2</span>
+                  <div class="lb-info">
+                    <strong>North Residence</strong>
+                    <span>Residential Village</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 60%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">10,540 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 18%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 3 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-3">3</span>
+                  <div class="lb-info">
+                    <strong>Engineering Block</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 68%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">11,230 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 12%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 4 -->
+                <div class="lb-row">
+                  <span class="lb-rank">4</span>
+                  <div class="lb-info">
+                    <strong>Administration Building</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 80%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">14,560 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 5%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 5 -->
+                <div class="lb-row">
+                  <span class="lb-rank">5</span>
+                  <div class="lb-info">
+                    <strong>Business School</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 90%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">16,210 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 2%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LEADERBOARD 2: TOP INDIVIDUAL ECOPOINTS -->
+            <div class="card-box leaderboard-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="star" class="gold-text-icon"></i>
+                    <h3>Top Individual EcoPoints Leaderboard</h3>
+                  </div>
+                  <span class="card-sub-header">Students and employees making the biggest impact</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="leaderboard-list">
+                <!-- RANK 1 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-1">1</span>
+                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Daniel Lim">
+                  <div class="lb-info">
+                    <strong>Daniel Lim</strong>
+                    <span>Computer Science • Year 3</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,840 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 28%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 2 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-2">2</span>
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Sarah Tan">
+                  <div class="lb-info">
+                    <strong>Sarah Tan</strong>
+                    <span>Environmental Studies • Year 2</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,460 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 18%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 3 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-3">3</span>
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Marcus Lee">
+                  <div class="lb-info">
+                    <strong>Marcus Lee</strong>
+                    <span>Engineering • Year 4</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,350 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 16%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 4 -->
+                <div class="lb-row">
+                  <span class="lb-rank">4</span>
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Priya Sharma">
+                  <div class="lb-info">
+                    <strong>Priya Sharma</strong>
+                    <span>Business School • Year 3</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">1,980 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 12%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 5 -->
+                <div class="lb-row">
+                  <span class="lb-rank">5</span>
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Chen Wei">
+                  <div class="lb-info">
+                    <strong>Chen Wei</strong>
+                    <span>Facilities Management</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">1,720 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 10%</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
