@@ -1,0 +1,35 @@
+-- EcoPoints MySQL schema for the local course demo.
+-- EcoPoints 本地课程演示数据库结构。
+CREATE DATABASE IF NOT EXISTS ecopoints CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE ecopoints;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY AUTO_INCREMENT, full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(40) NOT NULL DEFAULT 'student', campus VARCHAR(120), department VARCHAR(120),
+  is_active BOOLEAN NOT NULL DEFAULT TRUE, created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS initiatives (
+  id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(160) NOT NULL, description TEXT NOT NULL,
+  category VARCHAR(80) NOT NULL, points INT NOT NULL, start_date DATETIME NULL, end_date DATETIME NULL,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+CREATE TABLE IF NOT EXISTS point_transactions (
+  id INT PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, initiative_id INT NULL, points INT NOT NULL,
+  note VARCHAR(255), created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (initiative_id) REFERENCES initiatives(id)
+);
+CREATE TABLE IF NOT EXISTS rewards (
+  id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(160) NOT NULL, description TEXT NOT NULL,
+  points_cost INT NOT NULL, stock INT NOT NULL DEFAULT 0, is_active BOOLEAN NOT NULL DEFAULT TRUE
+);
+CREATE TABLE IF NOT EXISTS redemptions (
+  id INT PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, reward_id INT NOT NULL, points_spent INT NOT NULL,
+  status VARCHAR(40) NOT NULL DEFAULT 'requested', created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id), FOREIGN KEY (reward_id) REFERENCES rewards(id)
+);
+CREATE TABLE IF NOT EXISTS energy_readings (
+  id INT PRIMARY KEY AUTO_INCREMENT, campus VARCHAR(120) NOT NULL, area VARCHAR(120) NOT NULL,
+  building VARCHAR(160) NOT NULL, period_start DATETIME NOT NULL, usage_kwh DECIMAL(12,2) NOT NULL,
+  participation_count INT NOT NULL DEFAULT 0
+);

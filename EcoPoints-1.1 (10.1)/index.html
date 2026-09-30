@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoPoints | Ecological Operations Console</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-green: #0F684B;
+  --primary-green-hover: #0a4f38;
+  --text-dark: #1F2937;
+  --text-muted: #6B7280;
+  --border-color: #E5E7EB;
+  --bg-page: #F8FAFC;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* Page Visibility Switcher */
+.page-view {
+  display: none;
+}
+
+.page-view.active {
+  display: block;
+}
+
+.auth-message {
+  min-height: 1.25rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--primary-green);
+}
+
+.auth-message.error { color: #b42318; }
+.auth-message.success { color: var(--primary-green); }
+
+.auth-modal[hidden] { display: none; }
+.auth-modal {
+  position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 1rem;
+}
+.auth-modal-backdrop { position: absolute; inset: 0; background: rgba(15, 24, 20, 0.45); }
+.auth-modal-card {
+  position: relative; z-index: 1; width: min(100%, 460px); padding: 2rem;
+  border-radius: 12px; background: #fff; box-shadow: 0 24px 70px rgba(15, 24, 20, 0.22);
+}
+.auth-modal-card h2 { margin-bottom: 0.5rem; }
+.auth-modal-card > p { margin-bottom: 1.25rem; color: var(--text-muted); }
+.auth-modal-card input { width: 100%; padding: 0.8rem 0.9rem; border: 1px solid var(--border-color); border-radius: 8px; font: inherit; }
+.modal-close { position: absolute; top: 0.75rem; right: 0.9rem; border: 0; background: transparent; font-size: 1.7rem; color: var(--text-muted); cursor: pointer; }
+
+/* Shared utility pages / 功能页面共用样式 */
+.utility-shell { min-height: 100vh; display: flex; background: var(--bg-page); }
+.utility-sidebar { width: 250px; padding: 2rem 1rem; background: #fff; border-right: 1px solid var(--border-color); }
+.utility-sidebar .brand { padding: 0 .75rem 2rem; }
+.utility-nav { display: grid; gap: .35rem; }
+.utility-nav a { display: flex; align-items: center; gap: .75rem; padding: .8rem .9rem; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; }
+.utility-nav a:hover, .utility-nav a.active { color: var(--primary-green); background: #ecfdf5; }
+.utility-nav svg { width: 18px; height: 18px; }
+.utility-main { flex: 1; min-width: 0; padding: 3rem clamp(1.25rem, 4vw, 4rem); }
+.utility-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; }
+.utility-header h1 { margin: .35rem 0 .6rem; font-size: clamp(1.8rem, 3vw, 2.7rem); color: #111827; }
+.utility-header p, .card-muted { color: var(--text-muted); line-height: 1.5; }
+.eyebrow { color: var(--primary-green); font-weight: 800; font-size: .75rem; letter-spacing: .12em; }
+.points-total, .admin-badge { padding: .75rem 1rem; border-radius: 8px; background: #ecfdf5; color: var(--primary-green); font-weight: 800; white-space: nowrap; }
+.utility-grid, .admin-grid, .profile-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.utility-card { padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 10px; background: #fff; box-shadow: 0 8px 20px rgba(15, 23, 42, .04); }
+.utility-card h2 { margin-bottom: .45rem; color: #111827; font-size: 1.1rem; }
+.utility-card-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+.utility-card select, .settings-card select, .profile-card input, .profile-card label input { padding: .65rem .75rem; border: 1px solid var(--border-color); border-radius: 7px; background: #fff; font: inherit; }
+.points-bars { display: flex; align-items: flex-end; gap: 2rem; height: 210px; padding-top: 2rem; }
+.points-bars > div { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: .5rem; color: var(--text-muted); font-size: .8rem; }
+.points-bars b { width: min(48px, 65%); min-height: 12px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, #34d399, #059669); }
+.points-bars strong { color: var(--text-dark); }
+.activity-list { list-style: none; display: grid; gap: 1rem; margin-top: 1.25rem; }
+.activity-list li { display: grid; grid-template-columns: 34px 1fr auto; gap: .75rem; align-items: center; }
+.activity-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #ecfdf5; }
+.activity-list small { display: block; margin-top: .2rem; color: var(--text-muted); }
+.activity-list b { color: var(--primary-green); }
+.progress-card { margin-top: 1.25rem; display: grid; grid-template-columns: 1fr 2fr auto; gap: 1.25rem; align-items: center; }
+.progress-track { height: 10px; overflow: hidden; border-radius: 999px; background: #e5e7eb; }
+.progress-track span { display: block; height: 100%; border-radius: inherit; background: #059669; }
+.rewards-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.reward-item { position: relative; display: grid; grid-template-columns: 58px 1fr; gap: 1rem; padding: 1.4rem; border: 1px solid var(--border-color); border-radius: 10px; background: #fff; }
+.reward-icon { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 10px; background: #fff7ed; color: #c2410c; font-size: 1.8rem; }
+.reward-copy h2 { margin: .3rem 0; }
+.reward-copy p { color: var(--text-muted); line-height: 1.45; margin-bottom: .75rem; }
+.reward-label { color: var(--primary-green); font-size: .75rem; font-weight: 700; }
+.reward-item .reward-redeem { grid-column: 2; justify-self: start; padding: .65rem 1rem; }
+.reward-item small { position: absolute; right: 1.4rem; bottom: 1.5rem; color: var(--text-muted); }
+.shop-message { min-height: 1.4rem; margin-bottom: 1rem; color: var(--primary-green); }
+.shop-message.error { color: #b42318; }
+.empty-state { padding: 2rem; color: var(--text-muted); text-align: center; }
+.profile-card, .settings-card { display: grid; gap: 1rem; align-content: start; }
+.profile-avatar { grid-row: span 2; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: #d1fae5; background-position: center; background-size: cover; color: var(--primary-green); font-size: 1.4rem; font-weight: 800; }
+.profile-card label, .settings-card label { display: grid; gap: .4rem; color: var(--text-muted); font-size: .85rem; font-weight: 600; }
+.compact-button { justify-self: start; padding: .7rem 1rem; }
+.outline-button { padding: .7rem 1rem; border: 1px solid var(--primary-green); border-radius: 7px; background: transparent; color: var(--primary-green); font: inherit; font-weight: 700; cursor: pointer; }
+.switch-row { display: flex !important; grid-template-columns: 1fr auto; align-items: center; justify-content: space-between; }
+.switch-row input { position: absolute; opacity: 0; pointer-events: none; }
+.switch-ui { width: 42px; height: 24px; border-radius: 999px; background: #d1d5db; position: relative; }
+.switch-ui::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.switch-row input:checked + .switch-ui { background: var(--primary-green); }
+.switch-row input:checked + .switch-ui::after { transform: translateX(18px); }
+.admin-metric { display: flex; justify-content: space-between; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+.admin-metric strong { font-size: 1.6rem; color: var(--primary-green); }
+.admin-metric span { color: var(--text-muted); }
+.admin-action { display: flex; align-items: center; gap: .65rem; width: 100%; margin-top: .75rem; padding: .8rem; border: 1px solid var(--border-color); border-radius: 7px; background: #fff; color: var(--text-dark); font: inherit; cursor: pointer; }
+.admin-action:hover { border-color: var(--primary-green); color: var(--primary-green); }
+.admin-action svg { width: 17px; }
+.large-text { font-size: 112%; }
+.dark-mode { --bg-page: #111827; --text-dark: #e5e7eb; --text-muted: #aab4c3; --border-color: #334155; background: #111827; color: #e5e7eb; }
+.dark-mode .utility-sidebar, .dark-mode .utility-card, .dark-mode .reward-item, .dark-mode .auth-modal-card { background: #1f2937; }
+.dark-mode .utility-header h1, .dark-mode .utility-card h2 { color: #f8fafc; }
+
+@media (max-width: 900px) {
+  .utility-shell { display: block; }
+  .utility-sidebar { width: 100%; padding: 1rem; border-right: 0; border-bottom: 1px solid var(--border-color); }
+  .utility-sidebar .brand { padding-bottom: 1rem; }
+  .utility-nav { display: flex; overflow-x: auto; }
+  .utility-nav a { white-space: nowrap; }
+  .utility-grid, .admin-grid, .profile-layout, .rewards-grid { grid-template-columns: 1fr; }
+  .progress-card { grid-template-columns: 1fr; }
+}
+
+/* ===================================
+   PAGE 1: LOGIN STYLES
+=================================== */
+.login-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.hero-section {
+  flex: 1;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: 
+    linear-gradient(135deg, rgba(236, 253, 245, 0.95) 0%, rgba(209, 250, 229, 0.8) 100%),
+    radial-gradient(circle at 80% 20%, rgba(110, 231, 183, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(52, 211, 153, 0.2) 0%, transparent 50%);
+  position: relative;
+  overflow: hidden;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background-color: var(--primary-green);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon.small { width: 32px; height: 32px; }
+.logo-icon svg { width: 20px; height: 20px; }
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
+.hero-content {
+  max-width: 580px;
+  margin: auto 0;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title .highlight { color: var(--primary-green); }
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  color: #4B5563;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  max-width: 480px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feature-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon svg { width: 18px; height: 18px; }
+
+.icon-green { background-color: #D1FAE5; color: #047857; }
+.icon-teal { background-color: #CCFBF1; color: #0F766E; }
+.icon-emerald { background-color: #D1FAE5; color: #059669; }
+
+.feature-text h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.feature-text p {
+  font-size: 0.75rem;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+.auth-section {
+  width: 520px;
+  background-color: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: #FFFFFF;
+  padding: 2.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.card-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.green-text { color: var(--primary-green); }
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.75rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.875rem;
+  width: 18px;
+  height: 18px;
+  color: #9CA3AF;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 0.75rem 0.875rem 0.75rem 2.625rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #111827;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.875rem;
+  background: none;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+}
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: #4B5563;
+}
+
+.checkbox-label input { display: none; }
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+}
+
+.checkbox-label input:checked + .custom-checkbox {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.forgot-link {
+  color: #374151;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: var(--primary-green);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.25rem 0;
+  color: #9CA3AF;
+  font-size: 0.8125rem;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.divider span { padding: 0 0.75rem; }
+
+.btn-sso {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+.demo-link {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #6B7280;
+  margin-top: 1.5rem;
+}
+
+.demo-link a {
+  color: var(--primary-green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===================================
+   PAGE 2: HOME DASHBOARD STYLES
+=================================== */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #FFFFFF;
+  border-right: 1px solid var(--border-color);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar .brand { margin-bottom: 2rem; }
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: #4B5563;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-item.active {
+  background-color: #E6F4EA;
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+.slogan-card {
+  background-color: #F0FDF4;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #DCFCE7;
+}
+
+.globe-icon {
+  width: 28px;
+  height: 28px;
+  background-color: #BBF7D0;
+  color: #15803D;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.slogan-card h4 {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #14532D;
+}
+
+.slogan-card p {
+  font-size: 0.75rem;
+  color: #166534;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-header {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #F3F4F6;
+  padding: 0.625rem 1rem;
+  border-radius: 2rem;
+  width: 360px;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.8125rem;
+  width: 100%;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.notification-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  color: #4B5563;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #EF4444;
+  border-radius: 50%;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 0.8125rem; font-weight: 600; color: #111827; }
+.user-role { font-size: 0.75rem; color: #6B7280; }
+
+.dashboard-body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.welcome-banner {
+  background: linear-gradient(105deg, #ECFDF5 0%, #D1FAE5 60%, #A7F3D0 100%);
+  border-radius: 1rem;
+  padding: 2.25rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #A7F3D0;
+}
+
+.banner-text { max-width: 520px; }
+
+.banner-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #047857;
+  margin-bottom: 0.75rem;
+}
+
+.banner-text h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #064E3B;
+  margin-bottom: 0.75rem;
+}
+
+.banner-text p {
+  font-size: 0.875rem;
+  color: #047857;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.btn-banner {
+  background-color: var(--primary-green);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.graphic-badge {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #065F46;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.stat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-blue { background-color: #E0F2FE; color: #0284C7; }
+.icon-orange { background-color: #FFEDD5; color: #EA580C; }
+
+.stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+.stat-value-group { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.375rem 0; }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: #111827; }
+
+.stat-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.pill-green { background-color: #DCFCE7; color: #15803D; }
+.stat-tag-text { font-size: 0.75rem; color: #9CA3AF; }
+.stat-subtext { font-size: 0.6875rem; color: #6B7280; }
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 0.8fr;
+  gap: 1.25rem;
+}
+
+.card-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.card-title-bar h3, .impact-card h3 { font-size: 1rem; font-weight: 700; color: #111827; }
+
+.view-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-green);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.initiatives-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.initiative-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.init-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.bg-transport { background-color: #BFDBFE; }
+.bg-greenup { background-color: #A7F3D0; }
+.bg-energy { background-color: #FEF08A; }
+
+.init-details { flex: 1; }
+.init-details h4 { font-size: 0.8125rem; font-weight: 700; color: #111827; }
+.init-date { font-size: 0.6875rem; color: #9CA3AF; display: inline-flex; align-items: center; gap: 0.25rem; margin: 0.125rem 0; }
+.init-details p { font-size: 0.6875rem; color: #6B7280; }
+
+.points-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  background-color: #DCFCE7;
+  color: #15803D;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.energy-metrics { margin-bottom: 1.25rem; }
+.metric-label { font-size: 0.75rem; color: #6B7280; }
+.metric-value-row { display: flex; align-items: baseline; gap: 0.5rem; margin-top: 0.25rem; }
+.metric-number { font-size: 1.375rem; font-weight: 800; color: #111827; }
+.metric-sub { font-size: 0.6875rem; color: #9CA3AF; }
+
+.bar-chart-container {
+  display: flex;
+  gap: 0.75rem;
+  height: 140px;
+  align-items: flex-end;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  font-size: 0.625rem;
+  color: #9CA3AF;
+}
+
+.bars-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  height: 100%;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.bar-fill {
+  width: 18px;
+  background-color: #D1FAE5;
+  border-radius: 3px 3px 0 0;
+}
+
+.bar-fill.highlight-bar { background-color: var(--primary-green); }
+.bar-item span { font-size: 0.625rem; color: #9CA3AF; }
+
+.energy-footer-note {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  background-color: #F0FDF4;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.note-icon { color: #16A34A; }
+.note-text strong { display: block; font-size: 0.75rem; color: #14532D; }
+.note-text p { font-size: 0.6875rem; color: #166534; }
+
+.impact-card {
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.impact-illustration { margin: 1rem 0; }
+
+.globe-graphic {
+  width: 72px;
+  height: 72px;
+  background-color: #ECFDF5;
+  color: var(--primary-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.impact-desc {
+  font-size: 0.75rem;
+  color: #4B5563;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.btn-explore {
+  width: 100%;
+  padding: 0.625rem;
+  background-color: var(--primary-green);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  margin-bottom: 1.25rem;
+}
+
+.impact-badges {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  color: #6B7280;
+}
+
+.badge-item svg { color: var(--primary-green); }
+
+/* ===================================
+   PAGE 3: DASHBOARD EXTRA STYLES
+=================================== */
+
+.content-grid.two-cols {
+  grid-template-columns: 1fr 1fr;
+}
+
+.dash-banner {
+  background: linear-gradient(135deg, #ECFDF5 0%, #E6F4EA 100%);
+  border: 1px solid #A7F3D0;
+  border-radius: 1rem;
+  padding: 1.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dash-banner-left {
+  max-width: 500px;
+}
+
+.dash-tag {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--primary-green);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.dash-banner h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.dash-banner p {
+  font-size: 0.8125rem;
+  color: #4B5563;
+  line-height: 1.5;
+}
+
+.dash-filters {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.filter-dropdown {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: #374151;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.filter-dropdown select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  appearance: none;
+  padding-right: 0.5rem;
+}
+
+.card-header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.green-text-icon { color: #059669; }
+.teal-text-icon { color: #0D9488; }
+.gold-text-icon { color: #D97706; }
+
+.card-sub-header {
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  margin-top: 0.125rem;
+  display: block;
+}
+
+.mini-select {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #6B7280;
+  border: 1px solid var(--border-color);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+/* CHARTS STYLING */
+.chart-container-large {
+  display: flex;
+  gap: 0.75rem;
+  height: 180px;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.625rem;
+  color: #9CA3AF;
+  height: 100%;
+}
+
+.chart-area-wrap {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.trend-line-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+
+.chart-tooltip-pin {
+  position: absolute;
+  background: #111827;
+  color: #FFFFFF;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.6875rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-tooltip-pin strong { font-size: 0.75rem; }
+.chart-tooltip-pin small { color: #9CA3AF; font-size: 0.625rem; }
+
+.chart-bars-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 100%;
+  width: 100%;
+}
+
+.chart-col {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  width: 24px;
+}
+
+.bar-fill-light {
+  width: 100%;
+  background-color: #A7F3D0;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.7;
+}
+
+.stacked-bars-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 100%;
+  width: 100%;
+}
+
+.stacked-bar-col {
+  width: 28px;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+}
+
+.s-bar { width: 100%; border-radius: 2px; margin-bottom: 1px; }
+.s-1 { background-color: #047857; }
+.s-2 { background-color: #34D399; }
+.s-3 { background-color: #A7F3D0; }
+.s-4 { background-color: #BAE6FD; }
+
+.chart-x-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 28px;
+  font-size: 0.6875rem;
+  color: #9CA3AF;
+  margin-top: 0.5rem;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  font-size: 0.6875rem;
+  color: #6B7280;
+}
+
+.legend-item { display: flex; align-items: center; gap: 0.375rem; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.light-green-dot { background-color: #A7F3D0; }
+.dark-green-dot { background-color: #059669; }
+.s1-dot { background-color: #047857; }
+.s2-dot { background-color: #34D399; }
+.s3-dot { background-color: #A7F3D0; }
+.s4-dot { background-color: #BAE6FD; }
+
+/* LEADERBOARD STYLES */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.5rem 0.25rem;
+}
+
+.lb-rank {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  color: #6B7280;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lb-rank.rank-1 { background-color: #FEF3C7; color: #D97706; }
+.lb-rank.rank-2 { background-color: #E5E7EB; color: #374151; }
+.lb-rank.rank-3 { background-color: #FFEDD5; color: #C2410C; }
+
+.lb-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lb-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.lb-info strong { font-size: 0.8125rem; color: #111827; }
+.lb-info span { font-size: 0.6875rem; color: #9CA3AF; }
+
+.lb-bar-wrap {
+  flex: 1;
+  background-color: #F3F4F6;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.lb-bar-fill {
+  background-color: var(--primary-green);
+  height: 100%;
+  border-radius: 4px;
+}
+
+.lb-val-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lb-val {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* 
+   THEME: Warm Ceramic & Micro-HUD
+   Color Palette: Morning Mist, Sage, Moss, Terracotta, Graphite
+*/
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-green: #7a9476; /* sage green */
+  --primary-green-hover: #4a5d4e; /* moss green */
+  --text-dark: #2c332f; /* graphite */
+  --text-muted: #7a9476; /* sage green */
+  --border-color: rgba(44, 51, 47, 0.12);
+  --bg-page: #f5f6f4; /* mist white */
+  --ceramic-gray: #eaece9;
+  
+  --terracotta: #c47962;
+  --amber: #e2a85c;
+  --glacier-blue: #8fa8b5;
+  --ore-dark: #1a1e1c;
+  
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --font-hud: 'JetBrains Mono', monospace;
+  
+  --shadow-ceramic: 0 12px 32px rgba(122, 148, 118, 0.08), inset 0 2px 2px rgba(255, 255, 255, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+}
+
+body {
+  font-family: var(--font-main);
+  background-image: radial-gradient(circle at 50% -20%, rgba(122, 148, 118, 0.15), transparent 60%);
+}
+
+/* Micro Eco-Sandbox visual center */
+.eco-sandbox-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.eco-sandbox {
+  width: 60vh;
+  height: 60vh;
+  background: radial-gradient(circle at center, var(--ceramic-gray) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: rotateX(60deg) translateZ(-100px);
+  box-shadow: 0 40px 60px rgba(74, 93, 78, 0.1), inset 0 0 40px rgba(122, 148, 118, 0.2);
+  border: 1px solid rgba(122, 148, 118, 0.3);
+  position: relative;
+  animation: slowSpin 60s linear infinite;
+}
+
+.eco-sandbox::after {
+  content: '';
+  position: absolute;
+  top: 10%; left: 10%; right: 10%; bottom: 10%;
+  border-radius: 50%;
+  border: 1px dashed rgba(196, 121, 98, 0.4);
+}
+
+@keyframes slowSpin {
+  0% { transform: rotateX(60deg) rotateZ(0deg) translateZ(-100px); }
+  100% { transform: rotateX(60deg) rotateZ(360deg) translateZ(-100px); }
+}
+
+/* Glassmorphism / Ceramic Cards */
+.utility-card, .dashboard-card, .login-card, .leaderboard-card, .profile-card, .settings-card, .reward-item {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: var(--border-color) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-ceramic) !important;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* HUD elements */
+h1, h2, h3, h4, .brand-name {
+  color: var(--ore-dark) !important;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow, .card-sub-header, .reward-label, .lb-rank {
+  font-family: var(--font-hud);
+  font-size: 0.65rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--sage-green) !important;
+}
+
+.stat-value, .lb-val, .points-total, .admin-metric strong {
+  font-family: var(--font-hud);
+  font-weight: 700;
+  color: var(--moss-green) !important;
+  text-shadow: 0 2px 4px rgba(74, 93, 78, 0.1);
+}
+
+/* Precision lines */
+.utility-sidebar, .sidebar {
+  background: rgba(245, 246, 244, 0.7) !important;
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(44, 51, 47, 0.08) !important;
+}
+
+/* Physical Interactions & Buttons */
+.btn-primary, .btn-sso, .admin-action, .compact-button, .outline-button, .nav-item, .utility-nav a {
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.btn-primary:active, .btn-sso:active, .admin-action:active, .compact-button:active, .outline-button:active, .nav-item:active, .utility-nav a:active {
+  transform: scale(0.97) !important; /* Spring physical press */
+}
+
+.btn-primary {
+  background: var(--moss-green) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(74, 93, 78, 0.2), inset 0 1px 1px rgba(255,255,255,0.2) !important;
+  border: 1px solid var(--ore-dark) !important;
+}
+
+.btn-primary:hover {
+  background: var(--sage-green) !important;
+  box-shadow: 0 8px 24px rgba(122, 148, 118, 0.3), inset 0 1px 1px rgba(255,255,255,0.4) !important;
+}
+
+/* Inputs / Switches */
+input, select, textarea {
+  background: rgba(255,255,255,0.5) !important;
+  border: 1px solid rgba(44, 51, 47, 0.12) !important;
+  border-radius: 10px !important;
+  color: var(--graphite) !important;
+  font-family: var(--font-main) !important;
+  transition: all 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: var(--terracotta) !important;
+  box-shadow: 0 0 0 3px rgba(196, 121, 98, 0.15) !important;
+  outline: none;
+}
+
+/* Active Nav state */
+.nav-item.active, .utility-nav a.active {
+  background: rgba(122, 148, 118, 0.15) !important;
+  color: var(--moss-green) !important;
+  border-left: 3px solid var(--terracotta) !important;
+  box-shadow: inset 2px 0 10px rgba(196, 121, 98, 0.05);
+}
+
+/* Icons */
+.feature-icon, .logo-icon {
+  background: #fff !important;
+  color: var(--terracotta) !important;
+  border: 1px solid rgba(196, 121, 98, 0.2) !important;
+  border-radius: 10px !important;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 8px rgba(196, 121, 98, 0.1) !important;
+}
+
+/* Energy Bars / Progress */
+.progress-track {
+  background: rgba(44, 51, 47, 0.05) !important;
+  border-radius: 6px !important;
+  height: 6px !important;
+  overflow: hidden;
+}
+
+.progress-track span, .lb-bar-fill {
+  background: linear-gradient(90deg, var(--sage-green), var(--glacier-blue)) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 8px rgba(143, 168, 181, 0.5);
+}
+
+.points-bars b {
+  background: linear-gradient(180deg, var(--glacier-blue), var(--sage-green)) !important;
+  border-radius: 4px 4px 0 0 !important;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-bottom: none;
+}
+
+/* Page transitions */
+.page-view {
+  opacity: 0;
+  display: none;
+  transform: translateY(10px) scale(0.99);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.page-view.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Audio Toggle Control */
+.audio-control {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: var(--border-color);
+  padding: 0.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--moss-green);
+  box-shadow: var(--shadow-ceramic);
+  transition: all 0.2s;
+}
+.audio-control:active { transform: scale(0.9); }
+
+/* v20261001.0310: dedicated visual layer; business markup stays unchanged. */
+:root {
+  --sage: #789477;
+  --moss: #385642;
+  --clay: #bf7963;
+  --mist: #f4f5f1;
+  --porcelain: #fffefa;
+  --ink: #29352e;
+  --water: #82a8b1;
+  --line: rgba(41, 53, 46, .13);
+}
+
+body { background: var(--mist); color: var(--ink); }
+.login-container { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(390px, .78fr); background: var(--mist); }
+.hero-section { min-width: 0; padding: clamp(2rem, 5vw, 5.5rem); color: var(--ink); background: linear-gradient(145deg, rgba(234,239,230,.9), rgba(244,245,241,.9)); position: relative; isolation: isolate; }
+.hero-section::before { content: ''; position: absolute; width: min(46vw, 610px); aspect-ratio: 1; right: -12%; bottom: -28%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.96) 0 3%, rgba(197,214,192,.52) 4% 30%, rgba(120,148,119,.2) 31% 56%, transparent 57%); box-shadow: 0 22px 60px rgba(56,86,66,.15), inset 14px 16px 30px rgba(255,255,255,.7); z-index: -1; }
+.hero-section::after { content: ''; position: absolute; width: 70%; height: 1px; right: 0; bottom: 18%; background: linear-gradient(90deg, transparent, rgba(191,121,99,.7), transparent); transform: rotate(-22deg); z-index: -1; }
+.hero-content { max-width: 35rem; margin: auto 0; }
+.hero-title { color: var(--ink) !important; font-size: clamp(3rem, 5.4vw, 5.75rem); line-height: .98; letter-spacing: -.065em; margin-bottom: 1.5rem; }
+.hero-title .highlight { color: var(--moss) !important; background: none; -webkit-text-fill-color: initial; }
+.hero-subtitle { color: #52645a; font-size: 1rem; max-width: 30rem; line-height: 1.7; }
+.features-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 49rem; gap: .75rem; margin-top: 3rem; }
+.feature-item { min-height: 11rem; padding: 1rem; border: 1px solid rgba(255,255,255,.7); border-radius: 18px; background: rgba(255,255,255,.42); box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 10px 20px rgba(56,86,66,.045); }
+.feature-icon { width: 2.5rem; height: 2.5rem; margin-bottom: 1.1rem; background: rgba(255,254,250,.75) !important; color: var(--clay) !important; }
+.feature-text h4 { color: var(--ink) !important; font-size: .88rem; }
+.feature-text p { color: #64746b; font-size: .75rem; line-height: 1.5; }
+.auth-section { width: auto; min-width: 0; padding: clamp(1.25rem, 4vw, 4rem); background: rgba(255,254,250,.76); backdrop-filter: blur(18px); }
+.login-card { width: min(100%, 29rem); padding: clamp(1.75rem, 4vw, 3rem); background: rgba(255,254,250,.82) !important; border: 1px solid rgba(255,255,255,.95) !important; border-radius: 26px !important; box-shadow: 0 24px 55px rgba(56,86,66,.09), inset 0 1px 0 #fff !important; }
+.card-title { color: var(--ink) !important; font-size: clamp(1.7rem, 2.4vw, 2.35rem); line-height: 1.14; }
+.green-text { color: var(--sage) !important; }
+.card-subtitle { color: #64746b !important; line-height: 1.65; }
+.form-group label { color: #45554c; }
+.input-wrapper { border-radius: 12px !important; background: rgba(255,255,255,.72); }
+.input-wrapper input { border-color: var(--line) !important; background: transparent !important; }
+.btn-primary { background: var(--moss) !important; border-color: var(--moss) !important; border-radius: 12px !important; }
+.btn-primary:hover { background: #476c51 !important; }
+.logo-icon { background: #fffefa !important; color: var(--clay) !important; border: 1px solid rgba(191,121,99,.2) !important; }
+.brand-name { color: var(--ink) !important; }
+.audio-control { background: rgba(255,254,250,.85); border: 1px solid var(--line); color: var(--moss); }
+
+/* Application pages share the same light, precise ecological instrument language. */
+.app-container { background: var(--mist); }
+.sidebar { background: rgba(255,254,250,.82) !important; border-right: 1px solid var(--line) !important; }
+.main-content { background: transparent; }
+.top-header { background: rgba(255,254,250,.65); border-bottom: 1px solid var(--line); backdrop-filter: blur(15px); }
+.nav-item.active { color: var(--moss) !important; background: rgba(120,148,119,.14) !important; border-left-color: var(--clay) !important; }
+.dashboard-card, .card-box, .stat-card { border-color: rgba(255,255,255,.92) !important; background: rgba(255,254,250,.75) !important; box-shadow: 0 12px 28px rgba(56,86,66,.06) !important; }
+
+@media (max-width: 900px) {
+  .login-container { grid-template-columns: 1fr; min-height: auto; }
+  .hero-section { min-height: auto; padding: 2rem 1.5rem 2.5rem; }
+  .hero-section::before { width: 18rem; right: -6rem; bottom: -9rem; }
+  .hero-title { font-size: clamp(2.8rem, 12vw, 4.25rem); max-width: 10ch; }
+  .features-grid { grid-template-columns: 1fr; margin-top: 2rem; }
+  .feature-item { min-height: auto; display: grid; grid-template-columns: 2.5rem 1fr; column-gap: .8rem; align-items: start; }
+  .feature-icon { margin: 0; grid-row: span 2; }
+  .auth-section { padding: 1rem 1rem 2rem; }
+  .login-card { width: 100%; }
+}
+
+</style>
+</head>
+<body>
+  <div class="eco-sandbox-container"><div class="eco-sandbox"></div></div>
+
+  <!-- ========================================== -->
+  <!-- PAGE 1: LOGIN SECTION (Active by default)  -->
+  <!-- ========================================== -->
+  <section id="loginPage" class="page-view active">
+    <div class="login-container">
+      
+      <!-- LEFT SIDE: Hero Section -->
+      <main class="hero-section">
+        <div class="brand">
+          <div class="logo-icon">
+            <i data-lucide="leaf"></i>
+          </div>
+          <span class="brand-name">EcoPoints</span>
+        </div>
+
+        <div class="hero-content">
+          <h1 class="hero-title">
+            People.<br>
+            Progress.<br>
+            <span class="highlight">A Greener Tomorrow.</span>
+          </h1>
+          <p class="hero-subtitle">
+            Join a community of students and employees making a real difference through sustainable choices, everyday.
+          </p>
+
+          <div class="features-grid">
+            <div class="feature-item">
+              <div class="feature-icon icon-green">
+                <i data-lucide="leaf"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Take action</h4>
+                <p>Sustainable transport, energy saving and more.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon icon-teal">
+                <i data-lucide="users"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Earn rewards</h4>
+                <p>Get EcoPoints for positive choices.</p>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <div class="feature-icon icon-emerald">
+                <i data-lucide="trending-up"></i>
+              </div>
+              <div class="feature-text">
+                <h4>Create impact</h4>
+                <p>Greener campuses and healthier communities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT SIDE: Login Card Area -->
+      <aside class="auth-section">
+        <div class="login-card">
+          <div class="card-brand">
+            <div class="logo-icon small">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <h2 class="card-title">
+            Welcome back — <br>
+            <span class="green-text">continue your sustainability journey.</span>
+          </h2>
+          <p class="card-subtitle">
+            Sign in to track your activity, earn rewards, and make a bigger impact together.
+          </p>
+
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <i data-lucide="mail" class="input-icon"></i>
+                <input type="email" id="email" placeholder="name@university.edu" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-wrapper">
+                <i data-lucide="lock" class="input-icon"></i>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                <button type="button" id="togglePassword" class="toggle-password" aria-label="Toggle password visibility">
+                  <i data-lucide="eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe">
+                <span class="custom-checkbox"></span>
+                Remember me
+              </label>
+              <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              Sign In <i data-lucide="arrow-right"></i>
+            </button>
+          </form>
+
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <button class="btn-sso" id="googleSignInBtn">
+            <svg class="google-icon" width="18" height="18" viewBox="0 0 18 18">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+            </svg>
+            Sign in with Google
+          </button>
+
+          <p class="demo-link">
+            New to EcoPoints? <a href="#" id="registerLink">Create an account <i data-lucide="arrow-right"></i></a>
+          </p>
+          <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PAGE: ACCOUNT PROFILE -->
+  <section id="profilePage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" class="active" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside>
+      <main class="utility-main"><div class="utility-header"><div><span class="eyebrow">ACCOUNT</span><h1>Your profile and preferences</h1><p>Manage personal details and the way EcoPoints feels.</p></div><button id="logoutBtn" class="outline-button">Sign out</button></div><div class="profile-layout"><article class="utility-card profile-card"><div class="profile-avatar" id="profileAvatar">ST</div><div><h2 id="profileName">Sarah Tan</h2><p id="profileEmail" class="card-muted">sarah.tan@example.edu</p></div><label>Profile picture<input id="profilePictureInput" type="file" accept="image/*"></label><button id="saveProfileBtn" class="btn-primary compact-button">Save changes</button><label>Full name<input id="profileNameInput" type="text" value="Sarah Tan"></label><label>Email<input id="profileEmailInput" type="email" value="sarah.tan@example.edu"></label><label>Phone<input id="profilePhoneInput" type="tel" placeholder="Add a phone number"></label><div id="profileMessage" class="shop-message"></div></article><article class="utility-card settings-card"><h2>Preferences</h2><label>Language<select id="languageSetting"><option value="en">English</option><option value="zh">中文（简体）</option></select></label><label>Font size<select id="fontSetting"><option value="normal">Normal</option><option value="large">Large</option></select></label><label class="switch-row"><span>Dark mode</span><input id="themeSetting" type="checkbox"><span class="switch-ui"></span></label><label class="switch-row"><span>Notifications</span><input id="notificationSetting" type="checkbox" checked><span class="switch-ui"></span></label></article></div></main>
+    </div>
+  </section>
+
+  <!-- PAGE: ADMIN VIEW -->
+  <section id="adminPage" class="page-view">
+    <div class="utility-shell"><aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" class="active" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside><main class="utility-main"><div class="utility-header"><div><span class="eyebrow">ADMIN</span><h1>Programme controls</h1><p>Review activity and manage the content shown to your community.</p></div><span class="admin-badge">Demo administrator</span></div><div class="admin-grid"><article class="utility-card"><h2>Programme health</h2><div class="admin-metric"><strong>68%</strong><span>Participation rate</span></div><div class="admin-metric"><strong>12,540</strong><span>EcoPoints this month</span></div><div class="admin-metric"><strong>24</strong><span>Active initiatives</span></div></article><article class="utility-card"><h2>Quick actions</h2><button class="admin-action" data-admin-action="initiative"><i data-lucide="plus"></i>Create initiative</button><button class="admin-action" data-admin-action="reward"><i data-lucide="gift"></i>Add reward item</button><button class="admin-action" data-admin-action="export"><i data-lucide="download"></i>Export monthly report</button><div id="adminMessage" class="shop-message"></div></article></div></main></div>
+  </section>
+
+  <!-- PAGE: ECOPOINTS ACTIVITY -->
+  <section id="ecoPointsPage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar">
+        <div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div>
+        <nav class="utility-nav">
+          <a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a>
+          <a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a>
+          <a href="#" class="active" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a>
+          <a href="#" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a>
+          <a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a>
+          <a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a>
+        </nav>
+      </aside>
+      <main class="utility-main">
+        <div class="utility-header"><div><span class="eyebrow">ECOPOINTS</span><h1>Your sustainability activity</h1><p>Review your points history and see how your actions add up.</p></div><span class="points-total" id="ecoPointsTotal">1,250 pts</span></div>
+        <div class="utility-grid">
+          <article class="utility-card"><div class="utility-card-heading"><div><h2>Points by activity</h2><p>Points earned across your recent actions.</p></div><select id="pointsPeriod"><option>This month</option><option>Last month</option><option>This semester</option></select></div><div class="points-bars"><div><span>Transport</span><b style="height:72%"></b><strong>420</strong></div><div><span>Energy</span><b style="height:54%"></b><strong>315</strong></div><div><span>Volunteering</span><b style="height:86%"></b><strong>515</strong></div></div></article>
+          <article class="utility-card activity-card"><h2>Recent activity</h2><p class="card-muted">Your latest verified sustainability actions.</p><ul class="activity-list"><li><span class="activity-icon">🚲</span><div><strong>Cycle to campus</strong><small>Today · Sustainable Transport</small></div><b>+50</b></li><li><span class="activity-icon">⚡</span><div><strong>Energy Saving Challenge</strong><small>Yesterday · Energy</small></div><b>+75</b></li><li><span class="activity-icon">🌱</span><div><strong>Campus Green-Up</strong><small>18 Jun · Volunteering</small></div><b>+100</b></li></ul></article>
+        </div>
+        <article class="utility-card progress-card"><div><h2>Monthly progress</h2><p class="card-muted">You are 68% of the way to your 2,000 point goal.</p></div><div class="progress-track"><span style="width:68%"></span></div><strong>1,360 / 2,000 pts</strong></article>
+      </main>
+    </div>
+  </section>
+
+  <!-- PAGE: REWARDS SHOP -->
+  <section id="rewardsPage" class="page-view">
+    <div class="utility-shell">
+      <aside class="utility-sidebar"><div class="brand"><div class="logo-icon"><i data-lucide="leaf"></i></div><span class="brand-name">EcoPoints</span></div><nav class="utility-nav"><a href="#" data-route="homePage"><i data-lucide="home"></i>Home</a><a href="#" data-route="dashboardPage"><i data-lucide="bar-chart-2"></i>Dashboard</a><a href="#" data-route="ecoPointsPage"><i data-lucide="zap"></i>EcoPoints</a><a href="#" class="active" data-route="rewardsPage"><i data-lucide="gift"></i>Rewards</a><a href="#" data-route="profilePage"><i data-lucide="user"></i>Profile</a><a href="#" data-route="adminPage"><i data-lucide="settings"></i>Admin</a></nav></aside>
+      <main class="utility-main"><div class="utility-header"><div><span class="eyebrow">REWARDS SHOP</span><h1>Redeem your EcoPoints</h1><p>Choose a useful reward and make your points count.</p></div><span class="points-total" id="shopBalance">1,250 pts</span></div><div id="rewardMessage" class="shop-message" role="status"></div><div id="rewardsGrid" class="rewards-grid"><div class="empty-state">Loading rewards...</div></div></main>
+    </div>
+  </section>
+
+  <div id="registerModal" class="auth-modal" hidden>
+    <div class="auth-modal-backdrop" data-close-register></div>
+    <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+      <button type="button" class="modal-close" data-close-register aria-label="Close registration">&times;</button>
+      <h2 id="registerTitle">Create your EcoPoints account</h2>
+      <p>Start tracking sustainable actions and earning rewards.</p>
+      <form id="registerForm" class="login-form">
+        <div class="form-group"><label for="registerName">Full name</label><input id="registerName" type="text" required minlength="2" autocomplete="name"></div>
+        <div class="form-group"><label for="registerEmail">Email</label><input id="registerEmail" type="email" required autocomplete="email"></div>
+        <div class="form-group"><label for="registerPassword">Password</label><input id="registerPassword" type="password" required minlength="8" autocomplete="new-password"></div>
+        <button type="submit" class="btn-primary">Create account <i data-lucide="arrow-right"></i></button>
+        <p id="registerMessage" class="auth-message" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- PAGE 2: HOME DASHBOARD (Hidden initially)  -->
+  <!-- ========================================== -->
+  <section id="homePage" class="page-view">
+    <div class="app-container">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <div class="logo-icon">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item active nav-home-btn" data-route="homePage">
+              <i data-lucide="home"></i>
+              <span>Home</span>
+            </a>
+            <a href="#" class="nav-item nav-dash-btn" data-route="dashboardPage">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-route="ecoPointsPage">
+              <i data-lucide="zap"></i>
+              <span>EcoPoints</span>
+            </a>
+            <a href="#" class="nav-item" data-route="rewardsPage">
+              <i data-lucide="gift"></i>
+              <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item" data-route="profilePage">
+              <i data-lucide="user"></i>
+              <span>Profile</span>
+            </a>
+            <a href="#" class="nav-item" data-route="adminPage">
+              <i data-lucide="settings"></i>
+              <span>Admin</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="slogan-card">
+            <div class="globe-icon">
+              <i data-lucide="globe"></i>
+            </div>
+            <h4>Small actions brighter tomorrows.</h4>
+            <p>People. Progress. A Greener Tomorrow.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="main-content">
+        
+        <!-- TOP HEADER -->
+        <header class="top-header">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search for initiatives, rewards, or people...">
+          </div>
+
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+
+            <div class="user-profile">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120" alt="Sarah Tan" class="avatar">
+              <div class="user-info">
+                <span class="user-name">Sarah Tan</span>
+                <span class="user-role">Student</span>
+              </div>
+              <i data-lucide="chevron-down" class="dropdown-icon"></i>
+            </div>
+          </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-body">
+          
+          <!-- HERO BANNER -->
+          <section class="welcome-banner">
+            <div class="banner-text">
+              <span class="banner-tag">
+                <i data-lucide="leaf"></i> WELCOME TO ECOPOINTS
+              </span>
+              <h1>Track sustainability.<br>Earn rewards.</h1>
+              <p>Students and employees can earn EcoPoints through sustainable transport, energy saving, volunteering and more — for a cleaner, healthier tomorrow.</p>
+              <button class="btn-banner">
+                Start Collecting Points <i data-lucide="arrow-right"></i>
+              </button>
+            </div>
+            <div class="banner-graphic">
+              <div class="graphic-badge">
+                <span>GREENER PEOPLE BRIGHTER TOMORROWS</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- STATS CARDS ROW -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-green">
+                  <i data-lucide="leaf"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Your EcoPoints Balance</span>
+              <div class="stat-value-group">
+                <span class="stat-value">1,250</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +120</span>
+              </div>
+              <p class="stat-subtext">Keep going! Every action counts.</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-blue">
+                  <i data-lucide="zap"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Latest Activities</span>
+              <div class="stat-value-group">
+                <span class="stat-value">5</span>
+                <span class="stat-tag-text">this week</span>
+              </div>
+              <p class="stat-subtext">Cycling, volunteering, energy saving</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-orange">
+                  <i data-lucide="gift"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Rewards Redeemed</span>
+              <div class="stat-value-group">
+                <span class="stat-value">3</span>
+                <span class="stat-tag-text">this semester</span>
+              </div>
+              <p class="stat-subtext">You're making a positive impact!</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-emerald">
+                  <i data-lucide="trophy"></i>
+                </div>
+                <i data-lucide="chevron-right" class="arrow-link"></i>
+              </div>
+              <span class="stat-label">Your Energy-Saving Rank</span>
+              <div class="stat-value-group">
+                <span class="stat-value">#12</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 5 places</span>
+              </div>
+              <p class="stat-subtext">Top 10% in your organisation!</p>
+            </div>
+          </section>
+
+          <!-- MAIN 3-COLUMN SECTIONS -->
+          <section class="content-grid">
+            <div class="card-box initiatives-card">
+              <div class="card-title-bar">
+                <h3>Featured Initiatives</h3>
+                <a href="#" class="view-link">View All <i data-lucide="arrow-right"></i></a>
+              </div>
+              <div class="initiatives-list">
+                <div class="initiative-item">
+                  <div class="init-thumb bg-transport"></div>
+                  <div class="init-details">
+                    <h4>Sustainable Transport Week</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Apr 22 – Apr 28</span>
+                    <p>Cycle, walk or take public transport to earn extra EcoPoints!</p>
+                  </div>
+                  <span class="points-badge">+50 pts</span>
+                </div>
+
+                <div class="initiative-item">
+                  <div class="init-thumb bg-greenup"></div>
+                  <div class="init-details">
+                    <h4>Campus Green-Up</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Ongoing</span>
+                    <p>Join tree planting and campus clean-up activities.</p>
+                  </div>
+                  <span class="points-badge">+100 pts</span>
+                </div>
+
+                <div class="initiative-item">
+                  <div class="init-thumb bg-energy"></div>
+                  <div class="init-details">
+                    <h4>Energy Saving Challenge</h4>
+                    <span class="init-date"><i data-lucide="calendar"></i> Apr 1 – Apr 30</span>
+                    <p>Reduce energy usage and help your campus reach net zero.</p>
+                  </div>
+                  <span class="points-badge">+75 pts</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box energy-preview-card">
+              <div class="card-title-bar">
+                <h3>Energy Dashboard Preview</h3>
+                <a href="#" class="view-link nav-dash-btn">View Dashboard <i data-lucide="arrow-right"></i></a>
+              </div>
+
+              <div class="energy-metrics">
+                <span class="metric-label">Campus Energy Usage</span>
+                <div class="metric-value-row">
+                  <span class="metric-number">12,540 kWh</span>
+                  <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 8%</span>
+                  <span class="metric-sub">vs. last month</span>
+                </div>
+              </div>
+
+              <div class="bar-chart-container">
+                <div class="y-axis">
+                  <span>20K</span>
+                  <span>15K</span>
+                  <span>10K</span>
+                  <span>5K</span>
+                  <span>0</span>
+                </div>
+                <div class="bars-wrapper">
+                  <div class="bar-item"><div class="bar-fill" style="height: 65%;"></div><span>Jan</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 70%;"></div><span>Feb</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 55%;"></div><span>Mar</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 50%;"></div><span>Apr</span></div>
+                  <div class="bar-item"><div class="bar-fill" style="height: 48%;"></div><span>May</span></div>
+                  <div class="bar-item"><div class="bar-fill highlight-bar" style="height: 42%;"></div><span>Jun</span></div>
+                </div>
+              </div>
+
+              <div class="energy-footer-note">
+                <div class="note-icon"><i data-lucide="leaf"></i></div>
+                <div class="note-text">
+                  <strong>Great progress!</strong>
+                  <p>Energy usage is 8% lower than last month.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-box impact-card">
+              <h3>Make a Bigger Impact</h3>
+              <div class="impact-illustration">
+                <div class="globe-graphic">
+                  <i data-lucide="globe"></i>
+                </div>
+              </div>
+              <p class="impact-desc">Together, our sustainable choices create healthier campuses, stronger communities and a brighter future.</p>
+              
+              <button class="btn-explore">
+                Explore Initiatives <i data-lucide="arrow-right"></i>
+              </button>
+
+              <div class="impact-badges">
+                <div class="badge-item">
+                  <i data-lucide="leaf"></i>
+                  <span>Cleaner Campus</span>
+                </div>
+                <div class="badge-item">
+                  <i data-lucide="users"></i>
+                  <span>Stronger Communities</span>
+                </div>
+                <div class="badge-item">
+                  <i data-lucide="sun"></i>
+                  <span>A Greener Tomorrow</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </section>
+
+
+  <!-- ========================================== -->
+  <!-- PAGE 3: DASHBOARD VIEW (Hidden initially)  -->
+  <!-- ========================================== -->
+  <section id="dashboardPage" class="page-view">
+    <div class="app-container">
+      
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="brand">
+            <div class="logo-icon">
+              <i data-lucide="leaf"></i>
+            </div>
+            <span class="brand-name">EcoPoints</span>
+          </div>
+
+          <nav class="nav-menu">
+            <a href="#" class="nav-item nav-home-btn" data-route="homePage">
+              <i data-lucide="home"></i>
+              <span>Home</span>
+            </a>
+            <a href="#" class="nav-item active nav-dash-btn" data-route="dashboardPage">
+              <i data-lucide="bar-chart-2"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-route="ecoPointsPage">
+              <i data-lucide="zap"></i>
+              <span>EcoPoints</span>
+            </a>
+            <a href="#" class="nav-item" data-route="rewardsPage">
+              <i data-lucide="gift"></i>
+              <span>Rewards</span>
+            </a>
+            <a href="#" class="nav-item" data-route="profilePage">
+              <i data-lucide="user"></i>
+              <span>Profile</span>
+            </a>
+            <a href="#" class="nav-item" data-route="adminPage">
+              <i data-lucide="settings"></i>
+              <span>Admin</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="slogan-card">
+            <div class="globe-icon">
+              <i data-lucide="globe"></i>
+            </div>
+            <h4>Small actions brighter tomorrows.</h4>
+            <p>People. Progress. A Greener Tomorrow.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <main class="main-content">
+        
+        <!-- TOP HEADER -->
+        <header class="top-header">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search for initiatives, rewards, or people...">
+          </div>
+
+          <div class="header-right">
+            <button class="notification-btn" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+
+            <div class="user-profile">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120" alt="Sarah Tan" class="avatar">
+              <div class="user-info">
+                <span class="user-name">Sarah Tan</span>
+                <span class="user-role">Student</span>
+              </div>
+              <i data-lucide="chevron-down" class="dropdown-icon"></i>
+            </div>
+          </div>
+        </header>
+
+        <!-- DASHBOARD BODY -->
+        <div class="dashboard-body">
+          
+          <!-- DASHBOARD HERO BANNER -->
+          <section class="dash-banner">
+            <div class="dash-banner-left">
+              <span class="dash-tag"><i data-lucide="leaf"></i> DASHBOARD</span>
+              <h1>Insights for a greener tomorrow.</h1>
+              <p>Track progress, see how your community is doing, and find out who's making a real impact with EcoPoints.</p>
+            </div>
+            <div class="dash-filters">
+              <div class="filter-dropdown">
+                <i data-lucide="calendar"></i>
+                <select>
+                  <option>This Month</option>
+                  <option>Last Month</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="filter-dropdown">
+                <i data-lucide="building-2"></i>
+                <select>
+                  <option>Campus</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+              <div class="filter-dropdown">
+                <i data-lucide="map-pin"></i>
+                <select>
+                  <option>By Area</option>
+                </select>
+                <i data-lucide="chevron-down"></i>
+              </div>
+            </div>
+          </section>
+
+          <!-- TOP METRICS (4 CARDS ROW) -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-green">
+                  <i data-lucide="leaf"></i>
+                </div>
+              </div>
+              <span class="stat-label">EcoPoints Earned<br><strong>This Month</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">12,540</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +18%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-blue">
+                  <i data-lucide="zap"></i>
+                </div>
+              </div>
+              <span class="stat-label">Total Sustainability<br><strong>Activities</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">356</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +24%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-orange">
+                  <i data-lucide="bar-chart-2"></i>
+                </div>
+              </div>
+              <span class="stat-label">Energy Usage<br><strong>(This Month)</strong></span>
+              <div class="stat-value-group">
+                <span class="stat-value">12,540 kWh</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 8%</span>
+              </div>
+              <p class="stat-subtext">vs. last month</p>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <div class="stat-icon icon-teal">
+                  <i data-lucide="users"></i>
+                </div>
+              </div>
+              <span class="stat-label">Participation Rate</span>
+              <div class="stat-value-group">
+                <span class="stat-value">68%</span>
+                <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> +12%</span>
+              </div>
+              <p class="stat-subtext">of community members</p>
+            </div>
+          </section>
+
+          <!-- CHARTS ROW (ENERGY USAGE TREND + SUSTAINABILITY PARTICIPATION) -->
+          <section class="content-grid two-cols">
+            
+            <!-- LEFT CHART: ENERGY USAGE TREND -->
+            <div class="card-box chart-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="leaf" class="green-text-icon"></i>
+                    <h3>Energy Usage Trend</h3>
+                  </div>
+                  <span class="card-sub-header">Total campus energy consumption</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <!-- BAR + LINE CHART MOCKUP -->
+              <div class="chart-container-large">
+                <div class="chart-y-axis">
+                  <span>20K</span>
+                  <span>15K</span>
+                  <span>10K</span>
+                  <span>5K</span>
+                  <span>0</span>
+                </div>
+                
+                <div class="chart-area-wrap">
+                  <div class="chart-tooltip-pin" style="left: 60%; top: 35%;">
+                    <strong>8,200 kWh</strong>
+                    <small>18 Jun 2024</small>
+                  </div>
+
+                  <!-- SVG TREND LINE OVERLAY -->
+                  <svg class="trend-line-svg" viewBox="0 0 500 150" preserveAspectRatio="none">
+                    <path d="M 10 30 Q 80 10, 150 40 T 300 70 T 490 60" fill="none" stroke="#059669" stroke-width="3"/>
+                  </svg>
+
+                  <div class="chart-bars-group">
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 70%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 75%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 65%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 55%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 50%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 48%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 52%;"></div></div>
+                    <div class="chart-col"><div class="bar-fill-light" style="height: 50%;"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-x-axis">
+                <span>1 Jun</span>
+                <span>7 Jun</span>
+                <span>14 Jun</span>
+                <span>21 Jun</span>
+                <span>28 Jun</span>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-item"><span class="dot light-green-dot"></span> Daily Energy Usage (kWh)</div>
+                <div class="legend-item"><span class="dot dark-green-dot"></span> 7-Day Average</div>
+              </div>
+            </div>
+
+            <!-- RIGHT CHART: SUSTAINABILITY PARTICIPATION -->
+            <div class="card-box chart-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="users" class="teal-text-icon"></i>
+                    <h3>Sustainability Participation</h3>
+                  </div>
+                  <span class="card-sub-header">Number of users participating in activities</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="chart-container-large">
+                <div class="chart-y-axis">
+                  <span>200</span>
+                  <span>150</span>
+                  <span>100</span>
+                  <span>50</span>
+                  <span>0</span>
+                </div>
+                
+                <div class="chart-area-wrap">
+                  <div class="stacked-bars-group">
+                    <!-- Stacked bars representation -->
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 15%;"></div>
+                      <div class="s-bar s-3" style="height: 20%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 30%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 18%;"></div>
+                      <div class="s-bar s-3" style="height: 22%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 32%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 20%;"></div>
+                      <div class="s-bar s-3" style="height: 25%;"></div>
+                      <div class="s-bar s-2" style="height: 25%;"></div>
+                      <div class="s-bar s-1" style="height: 30%;"></div>
+                    </div>
+                    <div class="stacked-bar-col">
+                      <div class="s-bar s-4" style="height: 15%;"></div>
+                      <div class="s-bar s-3" style="height: 30%;"></div>
+                      <div class="s-bar s-2" style="height: 20%;"></div>
+                      <div class="s-bar s-1" style="height: 35%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-x-axis">
+                <span>1 Jun</span>
+                <span>7 Jun</span>
+                <span>14 Jun</span>
+                <span>21 Jun</span>
+                <span>28 Jun</span>
+              </div>
+
+              <div class="chart-legend">
+                <div class="legend-item"><span class="dot s1-dot"></span> Energy Saving</div>
+                <div class="legend-item"><span class="dot s2-dot"></span> Green Commuting</div>
+                <div class="legend-item"><span class="dot s3-dot"></span> Recycling</div>
+                <div class="legend-item"><span class="dot s4-dot"></span> Other</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- LEADERBOARDS ROW -->
+          <section class="content-grid two-cols">
+            
+            <!-- LEADERBOARD 1: LOWEST ENERGY CONSUMPTION -->
+            <div class="card-box leaderboard-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="trophy" class="gold-text-icon"></i>
+                    <h3>Lowest Energy Consumption Leaderboard</h3>
+                  </div>
+                  <span class="card-sub-header">Buildings / Floors / Departments ranked by total energy usage (kWh)</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="leaderboard-list">
+                <!-- RANK 1 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-1">1</span>
+                  <div class="lb-info">
+                    <strong>Science Building</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 45%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">8,200 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 28%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 2 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-2">2</span>
+                  <div class="lb-info">
+                    <strong>North Residence</strong>
+                    <span>Residential Village</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 60%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">10,540 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 18%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 3 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-3">3</span>
+                  <div class="lb-info">
+                    <strong>Engineering Block</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 68%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">11,230 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 12%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 4 -->
+                <div class="lb-row">
+                  <span class="lb-rank">4</span>
+                  <div class="lb-info">
+                    <strong>Administration Building</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 80%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">14,560 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 5%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 5 -->
+                <div class="lb-row">
+                  <span class="lb-rank">5</span>
+                  <div class="lb-info">
+                    <strong>Business School</strong>
+                    <span>Campus Building</span>
+                  </div>
+                  <div class="lb-bar-wrap">
+                    <div class="lb-bar-fill" style="width: 90%;"></div>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">16,210 kWh</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-down-right"></i> 2%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LEADERBOARD 2: TOP INDIVIDUAL ECOPOINTS -->
+            <div class="card-box leaderboard-card">
+              <div class="card-title-bar">
+                <div>
+                  <div class="card-header-with-icon">
+                    <i data-lucide="star" class="gold-text-icon"></i>
+                    <h3>Top Individual EcoPoints Leaderboard</h3>
+                  </div>
+                  <span class="card-sub-header">Students and employees making the biggest impact</span>
+                </div>
+                <div class="mini-select">
+                  <span>This Month</span>
+                  <i data-lucide="chevron-down"></i>
+                </div>
+              </div>
+
+              <div class="leaderboard-list">
+                <!-- RANK 1 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-1">1</span>
+                  <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Daniel Lim">
+                  <div class="lb-info">
+                    <strong>Daniel Lim</strong>
+                    <span>Computer Science • Year 3</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,840 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 28%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 2 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-2">2</span>
+                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Sarah Tan">
+                  <div class="lb-info">
+                    <strong>Sarah Tan</strong>
+                    <span>Environmental Studies • Year 2</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,460 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 18%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 3 -->
+                <div class="lb-row">
+                  <span class="lb-rank rank-3">3</span>
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Marcus Lee">
+                  <div class="lb-info">
+                    <strong>Marcus Lee</strong>
+                    <span>Engineering • Year 4</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">2,350 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 16%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 4 -->
+                <div class="lb-row">
+                  <span class="lb-rank">4</span>
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Priya Sharma">
+                  <div class="lb-info">
+                    <strong>Priya Sharma</strong>
+                    <span>Business School • Year 3</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">1,980 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 12%</span>
+                  </div>
+                </div>
+
+                <!-- RANK 5 -->
+                <div class="lb-row">
+                  <span class="lb-rank">5</span>
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=80" class="lb-avatar" alt="Chen Wei">
+                  <div class="lb-info">
+                    <strong>Chen Wei</strong>
+                    <span>Facilities Management</span>
+                  </div>
+                  <div class="lb-val-group">
+                    <span class="lb-val">1,720 pts</span>
+                    <span class="stat-pill pill-green"><i data-lucide="arrow-up-right"></i> 10%</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </section>
+
+  
+<script>
+// Frontend authentication and page switching for the local demo.
+// 本地演示所需的前端登录、注册和页面切换逻辑。
+const API_BASE = 'http://127.0.0.1:8000';
+
+function byId(id) { return document.getElementById(id); }
+
+function setMessage(element, message, isError = true) {
+  if (!element) return;
+  element.textContent = message;
+  element.classList.toggle('error', isError);
+  element.classList.toggle('success', !isError);
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page-view').forEach((page) => page.classList.toggle('active', page.id === pageId));
+  document.querySelectorAll('[data-route], .nav-item').forEach((link) => {
+    const route = link.dataset.route || ({ Home: 'homePage', Dashboard: 'dashboardPage', EcoPoints: 'ecoPointsPage', Rewards: 'rewardsPage', Profile: 'profilePage', Admin: 'adminPage' }[link.textContent.trim()]);
+    link.classList.toggle('active', route === pageId);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (pageId === 'rewardsPage') loadRewards();
+  if (pageId === 'profilePage') loadProfilePreferences();
+}
+
+function saveSession(data, remember) {
+  const storage = remember ? localStorage : sessionStorage;
+  storage.setItem('ecopoints_token', data.access_token);
+  storage.setItem('ecopoints_user', JSON.stringify(data.user));
+}
+
+function getToken() {
+  return localStorage.getItem('ecopoints_token') || sessionStorage.getItem('ecopoints_token');
+}
+
+function clearSession() {
+  localStorage.removeItem('ecopoints_token');
+  localStorage.removeItem('ecopoints_user');
+  sessionStorage.removeItem('ecopoints_token');
+  sessionStorage.removeItem('ecopoints_user');
+}
+
+async function api(path, options = {}) {
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.detail || `Request failed (${response.status})`);
+  return data;
+}
+
+function updateUserLabels(user) {
+  document.querySelectorAll('.user-name').forEach((item) => { item.textContent = user.full_name; });
+  document.querySelectorAll('.user-role').forEach((item) => { item.textContent = user.role; });
+}
+
+async function signIn(email, password, remember) {
+  const data = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+  saveSession(data, remember);
+  updateUserLabels(data.user);
+  showPage('homePage');
+}
+
+async function registerAccount(payload) {
+  const data = await api('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) });
+  saveSession(data, true);
+  updateUserLabels(data.user);
+  byId('registerModal').hidden = true;
+  showPage('homePage');
+}
+
+function wireNavigation() {
+  document.querySelectorAll('[data-route], .nav-item, .nav-dash-btn').forEach((button) => button.addEventListener('click', (event) => {
+    event.preventDefault();
+    const route = button.dataset.route || (button.classList.contains('nav-dash-btn') ? 'dashboardPage' : ({ Home: 'homePage', Dashboard: 'dashboardPage', EcoPoints: 'ecoPointsPage', Rewards: 'rewardsPage', Profile: 'profilePage', Admin: 'adminPage' }[button.textContent.trim()]));
+    if (route) showPage(route);
+  }));
+}
+
+async function loadRewards() {
+  const grid = byId('rewardsGrid');
+  if (!grid) return;
+  try {
+    const rewards = await api('/api/rewards');
+    grid.innerHTML = rewards.map((reward) => {
+      const icon = reward.name.includes('Bottle') ? '♻' : '☕';
+      const available = reward.stock > 0;
+      return `<article class="reward-item"><div class="reward-icon">${icon}</div><div class="reward-copy"><span class="reward-label">${available ? 'Available now' : 'Out of stock'}</span><h2>${reward.name}</h2><p>${reward.description}</p><strong>${reward.points_cost} pts</strong></div><button class="btn-primary reward-redeem" data-reward-id="${reward.id}" ${available ? '' : 'disabled'}>${available ? 'Redeem' : 'Out of stock'}</button><small>${available ? `${reward.stock} left` : 'Check back later'}</small></article>`;
+    }).join('');
+    grid.querySelectorAll('.reward-redeem').forEach((button) => button.addEventListener('click', () => redeemReward(Number(button.dataset.rewardId), button)));
+  } catch (error) {
+    grid.innerHTML = '<div class="empty-state">Unable to load rewards. Make sure the API server is running.</div>';
+  }
+}
+
+async function redeemReward(rewardId, button) {
+  const message = byId('rewardMessage');
+  button.disabled = true;
+  try {
+    const result = await api(`/api/rewards/${rewardId}/redeem`, { method: 'POST', headers: { Authorization: `Bearer ${getToken()}` } });
+    setMessage(message, `${result.message}. ${result.remaining_points} points remaining.`, false);
+    byId('shopBalance').textContent = `${result.remaining_points} pts`;
+    await loadRewards();
+  } catch (error) {
+    setMessage(message, error.message);
+    button.disabled = false;
+  }
+}
+
+function loadProfilePreferences() {
+  const stored = JSON.parse(localStorage.getItem('ecopoints_profile') || '{}');
+  if (stored.name) byId('profileNameInput').value = stored.name;
+  if (stored.email) byId('profileEmailInput').value = stored.email;
+  if (stored.phone) byId('profilePhoneInput').value = stored.phone;
+  if (stored.language) byId('languageSetting').value = stored.language;
+  if (stored.picture) { byId('profileAvatar').style.backgroundImage = `url(${stored.picture})`; byId('profileAvatar').textContent = ''; }
+  if (stored.font) byId('fontSetting').value = stored.font;
+  if (stored.theme === 'dark') byId('themeSetting').checked = true;
+  if (stored.notifications !== undefined) byId('notificationSetting').checked = stored.notifications;
+  applyPreferences();
+}
+
+function applyPreferences() {
+  document.body.classList.toggle('large-text', byId('fontSetting')?.value === 'large');
+  document.body.classList.toggle('dark-mode', Boolean(byId('themeSetting')?.checked));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) window.lucide.createIcons();
+  const loginForm = byId('loginForm');
+  const authMessage = byId('authMessage');
+  const registerMessage = byId('registerMessage');
+  const registerModal = byId('registerModal');
+
+  loginForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    setMessage(authMessage, 'Signing in...', false);
+    try {
+      await signIn(byId('email').value.trim(), byId('password').value, byId('rememberMe').checked);
+    } catch (error) {
+      setMessage(authMessage, error.message);
+    }
+  });
+
+  byId('togglePassword')?.addEventListener('click', () => {
+    const password = byId('password');
+    password.type = password.type === 'password' ? 'text' : 'password';
+  });
+
+  byId('googleSignInBtn')?.addEventListener('click', () => {
+    setMessage(authMessage, 'Google Sign-In is not configured for this local demo. Use email registration or the demo account.');
+  });
+
+  byId('registerLink')?.addEventListener('click', (event) => {
+    event.preventDefault(); registerModal.hidden = false; byId('registerName')?.focus();
+  });
+  document.querySelectorAll('[data-close-register]').forEach((button) => button.addEventListener('click', () => { registerModal.hidden = true; }));
+
+  byId('registerForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    setMessage(registerMessage, 'Creating account...', false);
+    try {
+      await registerAccount({
+        full_name: byId('registerName').value.trim(),
+        email: byId('registerEmail').value.trim(),
+        password: byId('registerPassword').value,
+      });
+    } catch (error) {
+      setMessage(registerMessage, error.message);
+    }
+  });
+
+  wireNavigation();
+  byId('logoutBtn')?.addEventListener('click', () => { clearSession(); showPage('loginPage'); });
+  byId('saveProfileBtn')?.addEventListener('click', () => {
+    const previous = JSON.parse(localStorage.getItem('ecopoints_profile') || '{}');
+    const profile = { ...previous, name: byId('profileNameInput').value.trim(), email: byId('profileEmailInput').value.trim(), phone: byId('profilePhoneInput').value.trim(), language: byId('languageSetting').value, font: byId('fontSetting').value, theme: byId('themeSetting').checked ? 'dark' : 'light', notifications: byId('notificationSetting').checked };
+    localStorage.setItem('ecopoints_profile', JSON.stringify(profile));
+    byId('profileName').textContent = profile.name || 'EcoPoints member';
+    byId('profileEmail').textContent = profile.email;
+    byId('profileAvatar').textContent = (profile.name || 'EP').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+    setMessage(byId('profileMessage'), 'Profile preferences saved.', false);
+  });
+  byId('profilePictureInput')?.addEventListener('change', (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { byId('profileAvatar').style.backgroundImage = `url(${reader.result})`; byId('profileAvatar').textContent = ''; const profile = JSON.parse(localStorage.getItem('ecopoints_profile') || '{}'); profile.picture = reader.result; localStorage.setItem('ecopoints_profile', JSON.stringify(profile)); };
+    reader.readAsDataURL(file);
+  });
+  ['languageSetting', 'fontSetting', 'themeSetting', 'notificationSetting'].forEach((id) => byId(id)?.addEventListener('change', applyPreferences));
+  document.querySelectorAll('[data-admin-action]').forEach((button) => button.addEventListener('click', () => setMessage(byId('adminMessage'), `${button.textContent.trim()} is ready for backend integration.`, false)));
+  const savedUser = localStorage.getItem('ecopoints_user') || sessionStorage.getItem('ecopoints_user');
+  if (getToken() && savedUser) {
+    updateUserLabels(JSON.parse(savedUser));
+    showPage('homePage');
+  }
+});
+
+
+// WEB AUDIO API - ASMR Interactive Sounds
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let isAudioEnabled = true;
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+function playTone(freq, type, duration, vol=0.1) {
+    if (!isAudioEnabled || !audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+}
+
+// Droplet Pop (General clicks)
+function playDroplet() {
+    initAudio();
+    playTone(800, 'sine', 0.1, 0.15);
+    setTimeout(() => playTone(1200, 'sine', 0.1, 0.08), 30);
+}
+
+// Tactile Snap (Switches/Inputs)
+function playSnap() {
+    initAudio();
+    playTone(150, 'triangle', 0.05, 0.2);
+    setTimeout(() => playTone(250, 'square', 0.02, 0.1), 10);
+}
+
+// Air Chime (Success / Save / Redeem)
+function playChime() {
+    initAudio();
+    playTone(523.25, 'sine', 0.6, 0.1); // C5
+    setTimeout(() => playTone(659.25, 'sine', 0.6, 0.1), 100); // E5
+    setTimeout(() => playTone(783.99, 'sine', 0.8, 0.1), 200); // G5
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Inject audio toggle
+    const audioBtn = document.createElement('div');
+    audioBtn.className = 'audio-control';
+    audioBtn.innerHTML = '<i data-lucide="volume-2"></i>';
+    document.body.appendChild(audioBtn);
+    
+    // Refresh lucide icons for newly added elements
+    if(window.lucide) window.lucide.createIcons();
+
+    audioBtn.addEventListener('click', () => {
+        initAudio();
+        isAudioEnabled = !isAudioEnabled;
+        audioBtn.innerHTML = isAudioEnabled ? '<i data-lucide="volume-2"></i>' : '<i data-lucide="volume-x"></i>';
+        if(window.lucide) window.lucide.createIcons();
+        if(isAudioEnabled) playDroplet();
+    });
+
+    // Attach sounds to interactables
+    document.body.addEventListener('click', (e) => {
+        const target = e.target.closest('button, a, .nav-item');
+        if (target) {
+            // If it's a primary action like sign in, redeem, save, register
+            if (target.classList.contains('btn-primary') || target.textContent.trim().toLowerCase().includes('save') || target.textContent.trim().toLowerCase().includes('redeem')) {
+                playChime();
+            } else {
+                playDroplet();
+            }
+        }
+    });
+
+    document.body.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target.tagName === 'INPUT' && (target.type === 'checkbox' || target.type === 'radio') || target.tagName === 'SELECT') {
+            playSnap();
+        }
+    });
+});
+
+</script>
+</body>
+</html>
