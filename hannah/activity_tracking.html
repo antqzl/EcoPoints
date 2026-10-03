@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EcoPoints - Activity Tracking</title>
+
+    <!-- SAME CSS FILE AS THE REST OF THE WEBSITE -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- LUCIDE ICONS -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+
+<body>
+
+
+<div class="app-container">
+
+
+    <!-- =====================================================
+         LEFT SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+
+            <!-- BRAND -->
+            <div class="brand">
+
+                <div class="logo-icon">
+                    <i data-lucide="leaf"></i>
+                </div>
+
+                <span class="brand-name">
+                    EcoPoints
+                </span>
+
+            </div>
+
+
+
+            <!-- NAVIGATION -->
+            <nav class="nav-menu">
+
+
+                <a
+                    href="index.html"
+                    class="nav-item"
+                >
+
+                    <i data-lucide="home"></i>
+
+                    <span>
+                        Home
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="#"
+                    class="nav-item"
+                >
+
+                    <i data-lucide="bar-chart-2"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="activity_tracking.html"
+                    class="nav-item active"
+                >
+
+                    <i data-lucide="zap"></i>
+
+                    <span>
+                        Activities
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="rewards.html"
+                    class="nav-item"
+                >
+
+                    <i data-lucide="gift"></i>
+
+                    <span>
+                        Rewards
+                    </span>
+
+                </a>
+
+
+
+                <a
+                    href="#"
+                    class="nav-item"
+                >
+
+                    <i data-lucide="user"></i>
+
+                    <span>
+                        Profile
+                    </span>
+
+                </a>
+
+
+            </nav>
+
+        </div>
+
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom">
+
+            <div class="slogan-card">
+
+                <div class="globe-icon">
+
+                    <i data-lucide="globe"></i>
+
+                </div>
+
+
+                <h4>
+                    Small actions brighter tomorrows.
+                </h4>
+
+
+                <p>
+                    People. Progress.
+                    A Greener Tomorrow.
+                </p>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =====================================================
+             TOP HEADER
+        ====================================================== -->
+
+        <header class="top-header">
+
+
+            <!-- RIGHT SIDE -->
+            <div class="header-right">
+
+
+                <button
+                    class="notification-btn"
+                    aria-label="Notifications"
+                >
+
+                    <i data-lucide="bell"></i>
+
+                    <span class="notification-badge"></span>
+
+                </button>
+
+
+
+                <div class="user-profile">
+
+
+                    <!-- Can replace with actual image later -->
+                    <div class="avatar-placeholder"></div>
+
+
+                    <div class="user-info">
+
+                        <span class="user-name">
+                            User
+                        </span>
+
+                        <span class="user-role">
+                            User Role
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================================
+             PAGE CONTENT
+        ====================================================== -->
+
+        <div class="dashboard-body">
+
+
+            <!-- =====================================================
+                 HERO
+            ====================================================== -->
+
+            <section class="ecopoints-banner">
+
+
+                <div class="banner-text">
+
+                    <span class="banner-tag">
+
+                        <i data-lucide="leaf"></i>
+
+                        COLLECT ECOPOINTS
+
+                    </span>
+
+
+                    <h1>
+
+                        Small actions<br>
+
+                        <span>
+                            drive big change.
+                        </span>
+
+                    </h1>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =====================================================
+                 ECOPOINT BALANCE
+            ====================================================== -->
+
+            <section class="ecopoint-balance-card">
+
+
+                <div class="balance-icon">
+
+                    <i data-lucide="leaf"></i>
+
+                </div>
+
+
+
+                <div>
+
+
+                    <span class="stat-label">
+
+                        Your EcoPoints Balance
+
+                    </span>
+
+
+
+                    <div class="stat-value-group">
+
+
+                        <span
+                            class="stat-value"
+                            id="userPoints"
+                        >
+                            0
+                        </span>
+
+
+                    </div>
+
+
+
+                    <p class="stat-subtext">
+
+                        Keep going! Every action counts.
+
+                    </p>
+
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =====================================================
+                 TABS
+            ====================================================== -->
+
+            <section class="ecopoints-tabs">
+
+
+                <!-- TRANSPORT TAB BUTTON -->
+                <button
+                    class="eco-tab active"
+                    onclick="showEcoTab('transportTab', this)"
+                >
+
+                    <i data-lucide="bike"></i>
+
+                    Sustainable Transport
+
+                </button>
+
+
+
+                <!-- VOLUNTEERING TAB BUTTON -->
+                <button
+                    class="eco-tab"
+                    onclick="showEcoTab('volunteerTab', this)"
+                >
+
+                    <i data-lucide="users"></i>
+
+                    Volunteering Initiatives
+
+                </button>
+
+
+            </section>
+
+
+
+            <!-- =====================================================
+                 SUSTAINABLE TRANSPORT
+            ====================================================== -->
+
+            <section
+                id="transportTab"
+                class="eco-tab-content"
+            >
+
+
+                <div class="section-heading">
+
+                    <h2>
+                        Log Your Sustainable Transport
+                    </h2>
+
+
+                    <p>
+                        Choose a mode of transport and
+                        log your trip to earn EcoPoints.
+                    </p>
+
+                </div>
+
+
+
+                <div class="transport-grid">
+
+
+                    <!-- WALKING -->
+                    <div class="transport-card">
+
+
+                        <div class="transport-icon-box">
+                             <i data-lucide="footprints"></i>
+                        </div>
+
+
+
+                        <div class="transport-card-content">
+
+
+                            <div class="transport-card-header">
+
+                                <h3>
+                                    Walking
+                                </h3>
+
+                                <span class="points-badge">
+                                    +10 pts
+                                </span>
+
+                            </div>
+
+
+
+                            <p>
+
+                                Log your walk to campus
+                                or around the city.
+
+                            </p>
+
+
+
+                            <button class="btn-action">
+
+                                Log a Walk
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CYCLING -->
+                    <div class="transport-card">
+
+
+                        <!-- CYCLING -->
+                    <div class="transport-icon-box">
+                        <i data-lucide="bike"></i>
+                            </div>
+
+
+
+                        <div class="transport-card-content">
+
+
+                            <div class="transport-card-header">
+
+                                <h3>
+                                    Cycling
+                                </h3>
+
+                                <span class="points-badge">
+                                    +20 pts
+                                </span>
+
+                            </div>
+
+
+
+                            <p>
+
+                                Log your cycling trip
+                                to earn EcoPoints.
+
+                            </p>
+
+
+
+                            <button class="btn-action">
+
+                                Log a Cycle
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- BUS -->
+                    <div class="transport-card">
+                        <div class="transport-icon-box">
+                            <i data-lucide="bus"></i>
+
+                        </div>
+
+
+
+                        <div class="transport-card-content">
+
+
+                            <div class="transport-card-header">
+
+                                <h3>
+
+                                    Campus Bus /
+                                    Public Transport
+
+                                </h3>
+
+
+                                <span class="points-badge">
+                                    +15 pts
+                                </span>
+
+                            </div>
+
+
+
+                            <p>
+
+                                Log your bus or public
+                                transport trip.
+
+                            </p>
+
+
+
+                            <button class="btn-action">
+
+                                Log a Trip
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CARPOOL -->
+                    <div class="transport-card">
+                        <div class="transport-icon-box">
+                            <i data-lucide="car"></i>
+                        </div>
+
+
+
+                        <div class="transport-card-content">
+
+
+                            <div class="transport-card-header">
+
+                                <h3>
+                                    Carpool
+                                </h3>
+
+                                <span class="points-badge">
+                                    +25 pts
+                                </span>
+
+                            </div>
+
+
+
+                            <p>
+
+                                Share a ride with other
+                                students or employees.
+
+                            </p>
+
+
+
+                            <button class="btn-action">
+
+                                Log a Carpool
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =====================================================
+                 VOLUNTEERING INITIATIVES
+            ====================================================== -->
+
+            <section
+                id="volunteerTab"
+                class="eco-tab-content"
+                style="display: none;"
+            >
+
+
+                <!-- TOP -->
+                <div class="volunteer-heading">
+
+
+                    <div>
+
+                        <h2>
+                            Join Sustainability Activities
+                        </h2>
+
+
+                        <p>
+
+                            Take part in sustainability initiatives
+                            organised by your community.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- OPEN SUBMISSION FORM -->
+                    <button
+                        class="btn-action"
+                        onclick="openInitiativeForm()"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        Initiate Activity
+
+                    </button>
+
+
+                </div>
+
+
+                <div id="initiativesContainer">
+
+    <!-- SAMPLE EVENT CARD FOR BACKEND REFERENCE -->
+    <div class="initiative-row sample-initiative">
+
+        <div class="initiative-details">
+
+            <h3>
+                Event 1
+            </h3>
+
+            <span>
+                <i data-lucide="calendar"></i>
+                Date: 12 October 2026
+            </span>
+
+            <span>
+                <i data-lucide="clock"></i>
+                Time: 9:00 AM - 12:00 PM
+            </span>
+
+            <span>
+                <i data-lucide="map-pin"></i>
+                Location: Main Campus
+            </span>
+
+            <span>
+                <i data-lucide="users"></i>
+                Capacity: 30 people
+            </span>
+
+            <p>
+                Activity Description:
+                Join this sustainability activity and contribute
+                to a greener campus community.
+            </p>
+
+        </div>
+
+
+        <div class="initiative-actions">
+
+            <span class="points-badge">
+                +100 EcoPoints
+            </span>
+
+            <button class="btn-action">
+
+                Join This Event
+
+                <i data-lucide="arrow-right"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================================
+     INITIATE ACTIVITY MODAL
+========================================================== -->
+
+<div
+    id="initiativeModal"
+    class="initiative-modal"
+    style="display: none;"
+>
+
+
+    <div class="initiative-form-card">
+
+
+        <!-- FORM HEADER -->
+        <div class="initiative-form-header">
+
+
+            <div>
+
+                <h2>
+                    Initiate Sustainability Activity
+                </h2>
+
+
+                <p>
+
+                    Submit your initiative for admin review.
+                    The activity will only be published
+                    after approval.
+
+                </p>
+
+            </div>
+
+
+
+            <button
+                type="button"
+                class="close-modal-btn"
+                onclick="closeInitiativeForm()"
+            >
+
+                <i data-lucide="x"></i>
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =====================================================
+             INITIATIVE FORM
+        ====================================================== -->
+
+        <form id="initiativeForm">
+
+
+            <!-- TITLE -->
+            <div class="initiative-form-group">
+
+                <label for="initiativeTitle">
+
+                    Activity Name
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="initiativeTitle"
+                    name="title"
+                    placeholder="Example: Campus Clean-Up"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DATE -->
+            <div class="initiative-form-group">
+
+                <label for="initiativeDate">
+
+                    Date
+
+                </label>
+
+
+                <input
+                    type="date"
+                    id="initiativeDate"
+                    name="date"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- TIMES -->
+            <div class="initiative-form-row">
+
+
+                <div class="initiative-form-group">
+
+                    <label for="initiativeStartTime">
+
+                        Start Time
+
+                    </label>
+
+
+                    <input
+                        type="time"
+                        id="initiativeStartTime"
+                        name="startTime"
+                        required
+                    >
+
+                </div>
+
+
+
+                <div class="initiative-form-group">
+
+                    <label for="initiativeEndTime">
+
+                        End Time
+
+                    </label>
+
+
+                    <input
+                        type="time"
+                        id="initiativeEndTime"
+                        name="endTime"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- LOCATION -->
+            <div class="initiative-form-group">
+
+                <label for="initiativeLocation">
+
+                    Location
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="initiativeLocation"
+                    name="location"
+                    placeholder="Enter activity location"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+            <div class="initiative-form-group">
+
+                <label for="initiativeDescription">
+
+                    Description
+
+                </label>
+
+
+                <textarea
+                    id="initiativeDescription"
+                    name="description"
+                    rows="5"
+                    placeholder="Describe the activity..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- IMAGE -->
+            <div class="initiative-form-group">
+
+                <label for="initiativeImage">
+
+                    Activity Image
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="initiativeImage"
+                    name="image"
+                    accept="image/*"
+                >
+
+            </div>
+
+
+
+            <!-- INFORMATION -->
+            <div class="initiative-review-note">
+
+                <i data-lucide="info"></i>
+
+
+                <p>
+
+                    Your activity will be submitted for
+                    admin approval. EcoPoints will be assigned
+                    by the admin before the activity is published.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- BUTTONS -->
+            <div class="initiative-form-actions">
+
+
+                <button
+                    type="button"
+                    class="btn-cancel"
+                    onclick="closeInitiativeForm()"
+                >
+
+                    Cancel
+
+                </button>
+
+
+
+                <button
+                    type="submit"
+                    class="btn-action"
+                >
+
+                    Submit for Review
+
+                    <i data-lucide="send"></i>
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+<script>
+
+
+    /* -----------------------------------------
+       TAB SWITCHING
+    ----------------------------------------- */
+
+    function showEcoTab(tabId, button) {
+
+
+        const contents =
+            document.querySelectorAll(".eco-tab-content");
+
+
+        contents.forEach(function(content) {
+
+            content.style.display = "none";
+
+        });
+
+
+
+        const buttons =
+            document.querySelectorAll(".eco-tab");
+
+
+        buttons.forEach(function(tabButton) {
+
+            tabButton.classList.remove("active");
+
+        });
+
+
+
+        document.getElementById(tabId).style.display = "block";
+
+
+        button.classList.add("active");
+
+
+        lucide.createIcons();
+
+    }
+
+
+
+    /* -----------------------------------------
+       OPEN INITIATIVE FORM
+    ----------------------------------------- */
+
+    function openInitiativeForm() {
+
+        document.getElementById(
+            "initiativeModal"
+        ).style.display = "flex";
+
+
+        lucide.createIcons();
+
+    }
+
+
+
+    /* -----------------------------------------
+       CLOSE INITIATIVE FORM
+    ----------------------------------------- */
+
+    function closeInitiativeForm() {
+
+        document.getElementById(
+            "initiativeModal"
+        ).style.display = "none";
+
+    }
+
+
+
+    /* -----------------------------------------
+       FORM SUBMISSION
+
+       Database teammate will replace this part.
+    ----------------------------------------- */
+
+    document
+        .getElementById("initiativeForm")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+
+                event.preventDefault();
+
+
+                /*
+                DATABASE TEAMMATE:
+
+                Collect values from:
+
+                initiativeTitle
+                initiativeDate
+                initiativeStartTime
+                initiativeEndTime
+                initiativeLocation
+                initiativeDescription
+                initiativeImage
+
+
+                Save something like:
+
+                status: "pending"
+                points: null
+
+                submittedBy: current user
+                */
+
+
+                alert(
+                    "Your initiative has been submitted for admin review."
+                );
+
+
+                this.reset();
+
+
+                closeInitiativeForm();
+
+            }
+        );
+
+
+
+    /* Load Lucide icons */
+    lucide.createIcons();
+
+
+</script>
+
+
+</body>
+
+</html>

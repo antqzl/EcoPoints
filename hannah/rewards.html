@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>EcoPoints - Rewards</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+
+<body>
+
+
+<div class="app-container">
+
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-top">
+
+            <div class="brand">
+
+                <div class="logo-icon">
+                    <i data-lucide="leaf"></i>
+                </div>
+
+                <span class="brand-name">
+                    EcoPoints
+                </span>
+
+            </div>
+
+
+            <nav class="nav-menu">
+
+                <a href="index.html" class="nav-item">
+
+                    <i data-lucide="home"></i>
+
+                    <span>Home</span>
+
+                </a>
+
+
+                <a href="#" class="nav-item">
+
+                    <i data-lucide="bar-chart-2"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+
+                <a href="activity_tracking.html" class="nav-item">
+
+                    <i data-lucide="zap"></i>
+
+                    <span>Activities</span>
+
+                </a>
+
+
+                <a href="rewards.html" class="nav-item active">
+
+                    <i data-lucide="gift"></i>
+
+                    <span>Rewards</span>
+
+                </a>
+
+
+                <a href="#" class="nav-item">
+
+                    <i data-lucide="user"></i>
+
+                    <span>Profile</span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="slogan-card">
+
+                <div class="globe-icon">
+
+                    <i data-lucide="globe"></i>
+
+                </div>
+
+                <h4>
+                    Small actions brighter tomorrows.
+                </h4>
+
+                <p>
+                    People. Progress.
+                    A Greener Tomorrow.
+                </p>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+        <header class="top-header">
+
+            <div class="header-right">
+
+                <button
+                    class="notification-btn"
+                    aria-label="Notifications"
+                >
+
+                    <i data-lucide="bell"></i>
+
+                    <span class="notification-badge"></span>
+
+                </button>
+
+
+                <div class="user-profile">
+
+                    <div class="avatar-placeholder"></div>
+
+                    <div class="user-info">
+
+                        <span class="user-name">
+                            User
+                        </span>
+
+                        <span class="user-role">
+                            User Role
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================
+             REWARDS PAGE
+        ====================================== -->
+
+        <div class="dashboard-body">
+
+
+            <!-- PAGE HEADER -->
+            <section class="rewards-header">
+
+                <div>
+
+                    <span class="banner-tag">
+
+                        <i data-lucide="gift"></i>
+
+                        REWARDS
+
+                    </span>
+
+                    <h1>
+                        Redeem your EcoPoints
+                    </h1>
+
+                    <p>
+                        Use your EcoPoints to unlock rewards
+                        offered by your organisation.
+                    </p>
+
+                </div>
+
+
+                <div class="rewards-points-box">
+
+                    <span>
+                        Your EcoPoints
+                    </span>
+
+                    <strong id="rewardPoints">
+                        0
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- REWARDS SECTION -->
+            <section class="rewards-section">
+
+
+                <div class="section-heading">
+
+                    <h2>
+                        Available Rewards
+                    </h2>
+
+                    <p>
+                        Rewards are unlocked based on your
+                        current EcoPoints balance.
+                    </p>
+
+                </div>
+
+
+
+                <!--
+                    DATABASE TEAMMATE:
+
+                    Rewards should eventually be loaded here
+                    from rewards created by the admin.
+
+                    For now these are sample UI cards only.
+                -->
+
+
+                <div class="user-rewards-grid">
+
+
+                    <!-- =========================
+                         REWARD 1 - CLAIMABLE
+                    ========================== -->
+
+                    <div class="user-reward-card reward-unlocked">
+
+                        <div class="reward-card-icon">
+
+                            <i data-lucide="coffee"></i>
+
+                        </div>
+
+
+                        <div class="reward-card-content">
+
+                            <span class="reward-status unlocked">
+                                Available
+                            </span>
+
+                            <h3>
+                                Reward 1
+                            </h3>
+
+                            <p>
+                                Redeem this reward using your EcoPoints.
+                            </p>
+
+
+                            <div class="reward-cost">
+
+                                <i data-lucide="leaf"></i>
+
+                                <strong>
+                                    0 points
+                                </strong>
+
+                            </div>
+
+
+                            <button class="reward-redeem-btn">
+
+                                Redeem Now
+
+                                <i data-lucide="arrow-right"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         REWARD 2 - LOCKED
+                    ========================== -->
+
+                    <div class="user-reward-card reward-locked">
+
+                        <div class="reward-card-icon">
+
+                            <i data-lucide="ticket"></i>
+
+                        </div>
+
+
+                        <div class="reward-card-content">
+
+                            <span class="reward-status locked">
+                                Locked
+                            </span>
+
+                            <h3>
+                                Reward 2
+                            </h3>
+
+                            <p>
+                                Earn more EcoPoints to unlock this reward.
+                            </p>
+
+
+                            <div class="reward-cost">
+
+                                <i data-lucide="lock"></i>
+
+                                <strong>
+                                    250 points to redeem
+                                </strong>
+
+                            </div>
+
+
+                            <button
+                                class="reward-redeem-btn locked-btn"
+                                disabled
+                            >
+
+                                Locked
+
+                                <i data-lucide="lock"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+<script>
+
+    lucide.createIcons();
+
+</script>
+
+
+</body>
+
+</html>
